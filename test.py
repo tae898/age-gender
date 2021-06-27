@@ -13,12 +13,13 @@ def main(config):
 
     # setup data_loader instances
     data_loader = getattr(module_data, config['data_loader']['type'])(
-        config['data_loader']['args']['data_dir'],
-        batch_size=512,
+        data_dir=config['data_loader']['args']['data_dir'],
+        batch_size=config['data_loader']['args']['eval_batch_size'],
         shuffle=False,
         validation_split=0.0,
-        training=False,
-        num_workers=2
+        num_workers=config['data_loader']['args']['num_workers'],
+        eval_batch_size=None,
+        training=False
     )
 
     # build model architecture
