@@ -1,4 +1,5 @@
 import json
+from numpy.core.numeric import full
 import torch
 import pandas as pd
 from pathlib import Path
@@ -12,6 +13,12 @@ import numpy as np
 import logging
 from scipy.io import loadmat
 from datetime import datetime
+
+
+def read_pickle(pickle_path):
+    with open(pickle_path, 'rb') as stream:
+        foo = pickle.load(stream)
+    return foo
 
 
 def update_lr_scheduler(config, train_dataloader_size):
@@ -325,6 +332,8 @@ def get_meta(mat_path, db):
     second_face_score = meta[db][0, 0]["second_face_score"][0]
     age = [calc_age(photo_taken[i], dob[i]) for i in range(len(dob))]
 
+    assert len(full_path) == len(dob) == len(gender) == len(
+        photo_taken) == len(face_score) == len(second_face_score) == len(age)
     return full_path, dob, gender, photo_taken, face_score, second_face_score, age
 
 

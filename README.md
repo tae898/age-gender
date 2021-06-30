@@ -54,10 +54,10 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
     ```
 
     ```bash
-    python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('imdb', resize=640)"
+    python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('imdb', resize=640, det_score=0.9)"
     ```
 
-    This will write `./data/imdb_crop/imdb.csv`
+    This will write `./data/imdb_crop/meta-data.json` and `./data/imdb_crop/data.npy`
 
 3. WIKI
 
@@ -68,10 +68,10 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
     ```
 
     ```bash
-    python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('wiki', resize=640)"
+    python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('wiki', resize=640, det_score=0.9)"
     ```
 
-    This will write `./data/wiki_crop/wiki.csv`
+    This will write `./data/wiki_crop/meta-data.json` and `./data/wiki_crop/data.npy`
 
 ### Dataset stats
 
@@ -88,11 +88,60 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
     | ----------------------- | ------------ | --------------- | ---------------- | --------------------------- | --------------- |
     | 0                       | 748          | 1,170           | 322              | 75                          | 2,315 (11.95 %) |
 
-    Genders and ages
-    | female | male  | 0 to 2 | 4 to 6 | 8 to 12 | 15 to 20 | 25 to 32 | 38 to 43 | 48 to 53 | 60 to 100 |
-    | ------ | ----- | ------ | ------ | ------- | -------- | -------- | -------- | -------- | --------- |
-    | 9,103  | 7,952 | 1,363  | 2,087  | 2,226   | 1,761    | 5,162    | 2,719    | 907      | 830       |
+    Genders
+    | female | male  |
+    | ------ | ----- |
+    | 9,103  | 7,952 |
 
+    Ages
+    | 0 to 2 | 4 to 6 | 8 to 12 | 15 to 20 | 25 to 32 | 38 to 43 | 48 to 53 | 60 to 100 |
+    | ------ | ------ | ------- | -------- | -------- | -------- | -------- | --------- |
+    | 1,363  | 2,087  | 2,226   | 1,761    | 5,162    | 2,719    | 907      | 830       |
+
+
+2. IMDB age and gender dataset
+
+    This dataset does not have train / val / test splits. Researchers normally use this dataset for pretraining.
+
+    | images before removal |
+    | --------------------- |
+    | 460,723               |
+
+    Removed data
+    | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score<0.9) | no embeddings | SUM               |
+    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | --------------------------- | ------------- | ----------------- |
+    | 22,200                  | 690          | 8,453           | 21,441           | 47,278             | 3855                        | 27            | 103,944 (22.56 %) |
+
+    Genders
+    | female  | male    |
+    | ------- | ------- |
+    | 153,316 | 203,463 |
+
+    Ages
+
+    Ages are fine-grained integers from 0 to 100. Check `./data/imdb_crop/meta-data.json` for the details.
+
+3. WIKI age and gender dataset
+
+    This dataset does not have train / val / test splits. Researchers normally use this dataset for pretraining.
+
+    | images before removal |
+    | --------------------- |
+    | 62,328                |
+
+    Removed data
+    | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score<0.9) | no embeddings | SUM               |
+    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | --------------------------- | ------------- | ----------------- |
+    | 10,909                  | 1,781        | 2,485           | 3,074            | 2,179              | 428                         | 0             | 20,856 (33.46 %) |
+
+    Genders
+    | female  | male    |
+    | ------- | ------- |
+    | 9,912 | 31,560 |
+
+    Ages
+
+    Ages are fine-grained integers from 0 to 100. Check `./data/imdb_crop/meta-data.json` for the details.
 
 ### Training
 
