@@ -3,7 +3,7 @@ import torch
 from torchvision.utils import make_grid
 from base import BaseTrainer
 from utils import inf_loop, MetricTracker
-
+from torch.cuda.amp import autocast
 
 class Trainer(BaseTrainer):
     """
@@ -43,8 +43,12 @@ class Trainer(BaseTrainer):
             data, target = data.to(self.device), target.to(self.device)
 
             self.optimizer.zero_grad()
-            output = self.model(data)
-            loss = self.criterion(output, target)
+
+            # AMP!
+            with autocast():
+                output = self.model(data)
+                loss = self.criterion(output, target)
+    
             loss.backward()
             self.optimizer.step()
 

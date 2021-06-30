@@ -1,8 +1,9 @@
 {
-    "name": "MLPAge",
+    "name": "MLPGender",
+    "num_cross_val": 5,
     "n_gpu": 0,
     "arch": {
-        "type": "MLPAge",
+        "type": "MLPGender",
         "args": {
             "num_classes": 2,
             "dropout": 0.5,
@@ -10,7 +11,7 @@
         }
     },
     "data_loader": {
-        "type": "AgeDataLoader",
+        "type": "GenderDataLoader",
         "args": {
             "data_dir": "data/",
             "batch_size": 64,
@@ -18,15 +19,14 @@
             "validation_split": 0.1,
             "num_workers": 8,
             "eval_batch_size": 128,
-            "dataset": "Adience",
-            "test_cross_val": 4
+            "dataset": "Adience"
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
             "lr": 0.001,
-            "weight_decay": 0.1
+            "weight_decay": 0.01
         }
     },
     "loss": "cse",
@@ -41,7 +41,7 @@
         }
     },
     "trainer": {
-        "epochs": 50,
+        "epochs": 30,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,

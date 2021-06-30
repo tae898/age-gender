@@ -3,6 +3,7 @@ from base import BaseDataLoader
 import torch
 import numpy as np
 import os
+import logging
 
 
 class MnistDataLoader(BaseDataLoader):
@@ -27,6 +28,7 @@ class GenderDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset='Adience', training=True,
                  test_cross_val=0):
+        logging.info(f"test cross val is {test_cross_val}")
         if dataset == 'Adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
                            allow_pickle=True).item()
@@ -54,6 +56,7 @@ class AgeDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset='Adience', training=True,
                  test_cross_val=0):
+        logging.info(f"test cross val is {test_cross_val}")
         if dataset == 'Adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
                            allow_pickle=True).item()

@@ -10,6 +10,51 @@ from tqdm import tqdm
 from PIL import Image
 import numpy as np
 import logging
+from scipy.io import loadmat
+from datetime import datetime
+
+
+def update_lr_scheduler(config, train_dataloader_size):
+    """
+    Update the key values in the dict so that the lr_scheduler is compatible
+    with the optimizer and trainer
+
+    config: ConfigParser object
+    """
+    if config.config['lr_scheduler']['type'] == "OneCycleLR":
+        config.config['lr_scheduler']['args'].update(
+            {"max_lr": config.config['optimizer']['args']['lr']})
+
+        config.config['lr_scheduler']['args'].update(
+            {"epochs": config.config['trainer']['epochs']})
+
+        config.config['lr_scheduler']['args'].update(
+            {"steps_per_epoch": train_dataloader_size})
+
+    return config
+
+
+def expand2square(pil_img, background_color):
+    width, height = pil_img.size
+    if width == height:
+        return pil_img
+    elif width > height:
+        result = Image.new(pil_img.mode, (width, width), background_color)
+        result.paste(pil_img, (0, (width - height) // 2))
+        return result
+    else:
+        result = Image.new(pil_img.mode, (height, height), background_color)
+        result.paste(pil_img, ((height - width) // 2, 0))
+        return result
+
+
+def resize_square_image(img, width=448, background_color=(0, 0, 0)):
+    if img.mode != 'RGB':
+        return None
+    img = expand2square(img, (0, 0, 0))
+    img = img.resize((width, width))
+
+    return img
 
 
 def ensure_dir(dirname):
@@ -94,7 +139,7 @@ def load_Adience_labels():
     return folds, header
 
 
-def get_Adience_image_paths(image_type='aligned'):
+def get_Adience_image_paths(image_type='aligned', resize=False):
     logging.info(f"getting Adience image paths ...")
 
     folds, header = load_Adience_labels()
@@ -121,7 +166,10 @@ def get_Adience_image_paths(image_type='aligned'):
             else:
                 raise ValueError
 
-            assert os.path.isfile(image_path)
+            if resize:
+                assert os.path.isfile(image_path + '.RESIZED.jpg')
+            else:
+                assert os.path.isfile(image_path)
 
             ages.append(age)
             genders.append(gender)
@@ -182,7 +230,7 @@ def get_nearest_number(query, predefined=[28.5, 40.5, 5.0, 80.0, 17.5, 50.5, 10.
     return predefined[idx]
 
 
-def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None):
+def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None, det_score=0.90):
 
     logging.info(f"removing Nones from the data ...")
 
@@ -196,6 +244,7 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None):
     removals['no_fold'] = 0
     removals['no_embeddings'] = 0
     removals['no_face_detected'] = 0
+    removals['bad_quality'] = 0
 
     for i, j, k, l in tqdm(zip(image_paths, ages, genders, fold_from)):
         if i is None:
@@ -222,10 +271,15 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None):
         if len(embedding) == 0:
             removals['no_face_detected'] += 1
             continue
+
         elif len(embedding) == 1:
             embedding = embedding[0]
         else:
             embedding = choose_one_face(i, embedding, 'center')
+
+        if embedding['det_score'] < det_score:
+            removals['bad_quality'] += 1
+            continue
 
         image_paths_.append(i)
         ages_.append(j)
@@ -243,3 +297,41 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None):
         logs['removed'] = removals
 
     return image_paths_, ages_, genders_, fa_paths_, fold_from_, embeddings_, logs
+
+
+def calc_age(taken, dob):
+    """Copied from
+    https://github.com/yu4u/age-gender-estimation/blob/master/src/utils.py
+    """
+    birth = datetime.fromordinal(max(int(dob) - 366, 1))
+
+    # assume the photo was taken in the middle of the year
+    if birth.month < 7:
+        return taken - birth.year
+    else:
+        return taken - birth.year - 1
+
+
+def get_meta(mat_path, db):
+    """Copied from
+    https://github.com/yu4u/age-gender-estimation/blob/master/src/utils.py
+    """
+    meta = loadmat(mat_path)
+    full_path = meta[db][0, 0]["full_path"][0]
+    dob = meta[db][0, 0]["dob"][0]  # Matlab serial date number
+    gender = meta[db][0, 0]["gender"][0]
+    photo_taken = meta[db][0, 0]["photo_taken"][0]  # year
+    face_score = meta[db][0, 0]["face_score"][0]
+    second_face_score = meta[db][0, 0]["second_face_score"][0]
+    age = [calc_age(photo_taken[i], dob[i]) for i in range(len(dob))]
+
+    return full_path, dob, gender, photo_taken, face_score, second_face_score, age
+
+
+def load_data(mat_path):
+    """Copied from
+    https://github.com/yu4u/age-gender-estimation/blob/master/src/utils.py
+    """
+    d = loadmat(mat_path)
+
+    return d["image"], d["gender"][0], d["age"][0], d["db"][0], d["img_size"][0, 0], d["min_score"][0, 0]
