@@ -1,25 +1,29 @@
 {
-    "name": "MLPGender",
+    "name": "ResMLP",
     "num_cross_val": 5,
-    "n_gpu": 0,
+    "n_gpu": 1,
+    "amp": true,
+    "checkpoint": null,
     "arch": {
-        "type": "MLPGender",
+        "type": "ResMLP",
         "args": {
-            "num_classes": 2,
-            "dropout": 0.5,
-            "num_layers": 5
+            "dropout": 0.2,
+            "num_residuals_per_block": 1,
+            "num_blocks": 4,
+            "num_classes": 8,
+            "num_initial_features": 512
         }
     },
     "data_loader": {
-        "type": "GenderDataLoader",
+        "type": "AgeDataLoader",
         "args": {
             "data_dir": "data/",
-            "batch_size": 64,
+            "batch_size": 128,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
-            "eval_batch_size": 128,
-            "dataset": "Adience"
+            "dataset": "imdb_wiki_adience",
+            "num_classes": 8
         }
     },
     "optimizer": {
@@ -36,17 +40,17 @@
     "lr_scheduler": {
         "type": "StepLR",
         "args": {
-            "step_size": 5,
+            "step_size": 2,
             "gamma": 0.1
         }
     },
     "trainer": {
-        "epochs": 30,
+        "epochs": 10,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
         "monitor": "min val_loss",
-        "early_stop": 10,
+        "early_stop": 5,
         "tensorboard": true
     }
 }

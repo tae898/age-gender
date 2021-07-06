@@ -14,11 +14,10 @@ def main(config):
     # setup data_loader instances
     data_loader = getattr(module_data, config['data_loader']['type'])(
         data_dir=config['data_loader']['args']['data_dir'],
-        batch_size=config['data_loader']['args']['eval_batch_size'],
+        batch_size=config['data_loader']['args']['batch_size'],
         shuffle=False,
         validation_split=0.0,
         num_workers=config['data_loader']['args']['num_workers'],
-        eval_batch_size=None,
         training=False
     )
 

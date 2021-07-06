@@ -17,7 +17,6 @@
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
-            "eval_batch_size": 128,
             "dataset": "Adience",
             "test_cross_val": 4
         }

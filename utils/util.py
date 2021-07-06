@@ -28,14 +28,14 @@ def update_lr_scheduler(config, train_dataloader_size):
 
     config: ConfigParser object
     """
-    if config.config['lr_scheduler']['type'] == "OneCycleLR":
-        config.config['lr_scheduler']['args'].update(
-            {"max_lr": config.config['optimizer']['args']['lr']})
+    if config['lr_scheduler']['type'] == "OneCycleLR":
+        config['lr_scheduler']['args'].update(
+            {"max_lr": config['optimizer']['args']['lr']})
 
-        config.config['lr_scheduler']['args'].update(
-            {"epochs": config.config['trainer']['epochs']})
+        config['lr_scheduler']['args'].update(
+            {"epochs": config['trainer']['epochs']})
 
-        config.config['lr_scheduler']['args'].update(
+        config['lr_scheduler']['args'].update(
             {"steps_per_epoch": train_dataloader_size})
 
     return config

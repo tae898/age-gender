@@ -14,6 +14,7 @@ import os
 from datetime import datetime
 from torch.cuda.amp import autocast
 from pprint import pprint
+import pickle
 
 # fix random seeds for reproducibility
 SEED = 42
@@ -26,6 +27,8 @@ np.random.seed(SEED)
 def train(config):
     logger = config.get_logger('train')
 
+    config['data_loader']['args']['training'] = True
+
     # setup data_loader instances
     data_loader = config.init_obj('data_loader', module_data)
     valid_data_loader = data_loader.split_validation()
@@ -35,6 +38,14 @@ def train(config):
     # build model architecture, then print to console
     model = config.init_obj('arch', module_arch)
     logger.info(model)
+
+    if config['checkpoint']:
+        logger.info(f'Loading checkpoint: {config["checkpoint"]} ...')
+        checkpoint = torch.load(config["checkpoint"])
+        state_dict = checkpoint['state_dict']
+        if config['n_gpu'] > 1:
+            model = torch.nn.DataParallel(model)
+        model.load_state_dict(state_dict)
 
     # prepare for (multi-device) GPU training
     device, device_ids = prepare_device(config['n_gpu'])
@@ -57,13 +68,16 @@ def train(config):
                       device=device,
                       data_loader=data_loader,
                       valid_data_loader=valid_data_loader,
-                      lr_scheduler=lr_scheduler)
+                      lr_scheduler=lr_scheduler,
+                      amp=config['amp'])
 
     trainer.train()
 
 
 def train_to_dump(config, checkpoint):
     logger = config.get_logger('train_to_dump')
+
+    config['data_loader']['args']['training'] = True
 
     # setup data_loader instances
     data_loader = config.init_obj('data_loader', module_data)
@@ -105,7 +119,11 @@ def train_to_dump(config, checkpoint):
             for i, (data, target) in enumerate(tqdm(dl)):
                 data, target = data.to(device), target.to(device)
 
-                with autocast():
+                if config['amp']:
+                    with autocast():
+                        output = model(data)
+                        loss = loss_fn(output, target)
+                else:
                     output = model(data)
                     loss = loss_fn(output, target)
 
@@ -131,12 +149,14 @@ def test(config, checkpoint):
     # setup data_loader instances
     data_loader = getattr(module_data, config['data_loader']['type'])(
         data_dir=config['data_loader']['args']['data_dir'],
-        batch_size=config['data_loader']['args']['eval_batch_size'],
+        batch_size=config['data_loader']['args']['batch_size'],
         shuffle=False,
         validation_split=0.0,
         num_workers=config['data_loader']['args']['num_workers'],
-        eval_batch_size=None,
-        training=False
+        dataset=config['data_loader']['args']['dataset'],
+        num_classes=config['data_loader']['args']['num_classes'],
+        test_cross_val=config['data_loader']['args']['test_cross_val'],
+        training=False,
     )
     # build model architecture
     model = config.init_obj('arch', module_arch)
@@ -168,7 +188,11 @@ def test(config, checkpoint):
         for i, (data, target) in enumerate(tqdm(data_loader)):
             data, target = data.to(device), target.to(device)
 
-            with autocast():
+            if config['amp']:
+                with autocast():
+                    output = model(data)
+                    loss = loss_fn(output, target)
+            else:
                 output = model(data)
                 loss = loss_fn(output, target)
 
@@ -187,16 +211,16 @@ def test(config, checkpoint):
     return log
 
 
-def main(args, options):
-    config_dict = read_json(args.parse_args().config)
+def main(config_path):
+    config_dict = read_json(config_path)
     num_cross_val = config_dict['num_cross_val']
 
     to_dump = {'config': config_dict}
     to_dump['stats'] = {split: {} for split in ['train', 'val', 'test']}
 
     for i in tqdm(range(num_cross_val)):
-        config = ConfigParser.from_args(args)
-        config.config['data_loader']['args'].update({"test_cross_val": i})
+        config_dict['data_loader']['args']['test_cross_val'] = i
+        config = ConfigParser(config_dict)
         train(config)
         logs = train_to_dump(config, checkpoint=os.path.join(
             config.save_dir, 'model_best.pth'))
@@ -230,17 +254,6 @@ if __name__ == '__main__':
         description='cross validation on adience dataset')
     args.add_argument('-c', '--config', default="config-cross-val.json", type=str,
                       help='config file path (default: None)')
-    args.add_argument('-r', '--resume', default=None, type=str,
-                      help='path to latest checkpoint (default: None)')
-    args.add_argument('-d', '--device', default=None, type=str,
-                      help='indices of GPUs to enable (default: all)')
 
-    # custom cli options to modify configuration from default values given in json file.
-    CustomArgs = collections.namedtuple('CustomArgs', 'flags type target')
-    options = [
-        CustomArgs(['--lr', '--learning_rate'],
-                   type=float, target='optimizer;args;lr'),
-        CustomArgs(['--bs', '--batch_size'], type=int,
-                   target='data_loader;args;batch_size')
-    ]
-    main(args, options)
+    config_path = args.parse_args().config
+    main(config_path)

@@ -6,3 +6,6 @@ def nll_loss(output, target):
 
 def cse(output, target):
     return F.cross_entropy(output, target)
+
+def mse(output, target):
+    return F.mse_loss(output, target)
