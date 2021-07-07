@@ -1,0 +1,44 @@
+{
+    "criterion": "cse",
+    "gender_or_age": "age",
+    "dropout": [
+        0,
+        0.1,
+        0.2
+    ],
+    "num_residuals_per_block": [
+        0,
+        1,
+        2
+    ],
+    "num_blocks": [
+        1,
+        2,
+        3
+    ],
+    "batch_size": [
+        64,
+        128
+    ],
+    "lr": [
+        1e-5,
+        1e-1
+    ],
+    "weight_decay": [
+        1e-6,
+        1e-1
+    ],
+    "gamma": [
+        1e-4,
+        1e-1
+    ],
+    "data_dir": "/home/tk/repos/age-gender/data",
+    "cpus": 8,
+    "dataset": "imdb_wiki",
+    "num_samples": 50,
+    "max_num_epochs": 10,
+    "gpus_per_trial": 1,
+    "limit_data": null,
+    "amp": true,
+    "num_classes": 8
+}

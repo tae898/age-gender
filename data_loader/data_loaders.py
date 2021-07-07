@@ -4,12 +4,13 @@ import torch
 import numpy as np
 import os
 import logging
+import random
 
 
 class GenderDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=0):
+                 test_cross_val=0, limit_data=None):
         logging.info(f"test cross val is {test_cross_val}")
         if dataset.lower() == 'adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
@@ -48,7 +49,13 @@ class GenderDataset(torch.utils.data.Dataset):
         else:
             raise NotImplementedError
 
-        self.data = data
+        if limit_data is not None:
+            logging.info(
+                f"reducing data samples from {len(data)} to {len(data[:limit_data])} ...")
+            random.shuffle(data)
+            self.data = data[:limit_data]
+        else:
+            self.data = data
 
     def __len__(self):
         return len(self.data)
@@ -63,7 +70,7 @@ class GenderDataset(torch.utils.data.Dataset):
 class AgeDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=0, num_classes=8):
+                 test_cross_val=0, num_classes=8, limit_data=None):
         logging.info(f"test cross val is {test_cross_val}")
 
         if num_classes == 8:
@@ -112,7 +119,13 @@ class AgeDataset(torch.utils.data.Dataset):
         else:
             raise NotImplementedError
 
-        self.data = data
+        if limit_data is not None:
+            logging.info(
+                f"reducing data samples from {len(data)} to {len(data[:limit_data])} ...")
+            random.shuffle(data)
+            self.data = data[:limit_data]
+        else:
+            self.data = data
 
     def __len__(self):
         return len(self.data)
@@ -132,11 +145,12 @@ class AgeDataset(torch.utils.data.Dataset):
 
 class GenderDataLoader(BaseDataLoader):
     def __init__(self, data_dir, batch_size, shuffle, validation_split,
-                 num_workers, dataset, num_classes, test_cross_val, training):
+                 num_workers, dataset, num_classes, training, test_cross_val=None,
+                 limit_data=None):
 
         self.dataset = GenderDataset(data_dir=data_dir, dataset=dataset,
                                      test_cross_val=test_cross_val,
-                                     training=training)
+                                     training=training, limit_data=limit_data)
 
         super().__init__(self.dataset, batch_size, shuffle, validation_split,
                          num_workers)
@@ -144,11 +158,13 @@ class GenderDataLoader(BaseDataLoader):
 
 class AgeDataLoader(BaseDataLoader):
     def __init__(self, data_dir, batch_size, shuffle, validation_split,
-                 num_workers, dataset, num_classes, test_cross_val, training):
+                 num_workers, dataset, num_classes, training, test_cross_val=None,
+                 limit_data=None):
 
         self.dataset = AgeDataset(data_dir=data_dir, dataset=dataset,
                                   test_cross_val=test_cross_val,
-                                  training=training, num_classes=num_classes)
+                                  training=training, num_classes=num_classes,
+                                  limit_data=limit_data)
 
         super().__init__(self.dataset, batch_size, shuffle, validation_split,
                          num_workers)

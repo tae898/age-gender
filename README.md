@@ -24,11 +24,11 @@ The insturctions can be found [here](https://github.com/taeert/insightface/blob/
 
 It might take some time. 
 
-The port number `10002` is the port that the insightface docker container listens to. Set `cuda=True` if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `image-path.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
+The port number `10002` is the port that the insightface docker container listens to. Set `cuda=True` in the below code snippet, if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `image-path.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
 
 Resizing image to the same shape (e.g. `resize=640` resizes every image to a black background square RGB image with the width and height being 640 pixels) dramatically increase the speed due to some mxnet stuff that I'm not a big fan of.
 
-`det_score` is the confidence score on face detection. The faces whose confidence score is lower than this this value will not be considered.
+`det_score` is the confidence score on face detection. The faces whose confidence score is lower than this this threshold value will not be considered.
 
 1.  Adience age and gender dataset
 
@@ -130,64 +130,162 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
     | 62,328                |
 
     Removed data
-    | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score<0.9) | no embeddings | SUM               |
-    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | --------------------------- | ------------- | ----------------- |
+    | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score<0.9) | no embeddings | SUM              |
+    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | --------------------------- | ------------- | ---------------- |
     | 10,909                  | 1,781        | 2,485           | 3,074            | 2,179              | 428                         | 0             | 20,856 (33.46 %) |
 
     Genders
-    | female  | male    |
-    | ------- | ------- |
-    | 9,912 | 31,560 |
+    | female | male   |
+    | ------ | ------ |
+    | 9,912  | 31,560 |
 
     Ages
 
     Ages are fine-grained integers from 0 to 100. Check `./data/imdb_crop/meta-data.json` for the details.
 
-### Training
+## Training
 
-#### Training a model
+### Model
 
-1. MLP
-    
-    wow this works good.
+The model is an MLP with residual connections. It's very light.
 
-1. MLP + Residual
+### Training steps
 
-    Let's see
+There are three training steps involved.
 
-1. MLP + Residual + automatic HP tuning
+1. Hyperparameter search using [Ray Tune](https://docs.ray.io/en/master/tune/index.html)
 
-    Let's see
+    This searches dropout rate, number of residuals per block, number of blocks in the network, batch size, peak learning rate, weight decay rate, and gamma of exponential learning rate decay. See `hp-tuning.py` and `hp-tuning.json` for the details.
+
+1. Pre-training on the `IMDB` and `WIKI` dataset. 
+
+    We'll use the optimal hyperparameters found in the step 1 to pre-train the model. See `train.py` and `train.json` for the details.
+
+1. Five random seeds on 5-fold cross-validation on the `Adience` dataset. 
+
+    Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. 
+
+## Evaluation results
+
+### Gender
+
+#### Pre-trained
+```
+"train_loss_mean": 0.035756768169454604,
+"train_loss_std": 0.0020211418618862223,
+"train_accuracy_mean": 0.9902959872287564,
+"train_accuracy_std": 0.0007618696495071593,
+
+"val_loss_mean": 0.03806625073733362,
+"val_loss_std": 0.00932198958435307,
+"val_accuracy_mean": 0.9899641804867985,
+"val_accuracy_std": 0.0028286318037089556,
+
+"test_loss_mean": 0.25444767223690967,
+"test_loss_std": 0.06082393270949546,
+"test_accuracy_mean": 0.9109055097220713,
+"test_accuracy_std": 0.022389514578131632
+```
+
+#### Not pre-trained
+
+```
+"train_loss_mean": 0.04613704621584779,
+"train_loss_std": 0.003341978420252909,
+"train_accuracy_mean": 0.9862985664676904,
+"train_accuracy_std": 0.001101129657443983,
+
+"val_loss_mean": 0.04566914670182671,
+"val_loss_std": 0.007143097508032387,
+"val_accuracy_mean": 0.9867329020619238,
+"val_accuracy_std": 0.002521348547538151,
+
+"test_loss_mean": 0.39788186767442213,
+"test_loss_std": 0.08673959940676833,
+"test_accuracy_mean": 0.855026333055,
+"test_accuracy_std": 0.030152854986659282
+```
+
+### Age (8-class)
+
+#### Pre-trained
+
+```
+"train_loss_mean": 0.266580416006805,
+"train_loss_std": 0.009325988423167151,
+"train_accuracy_mean": 0.9226152428724472,
+"train_accuracy_std": 0.0031907232333313407,
+
+"val_loss_mean": 0.3680720592439847,
+"val_loss_std": 0.017673356303800316,
+"val_accuracy_mean": 0.874282163736166,
+"val_accuracy_std": 0.008070140340575006,
+
+"test_loss_mean": 1.0014392203764806,
+"test_loss_std": 0.07049642859712374,
+"test_accuracy_mean": 0.615897137353467,
+"test_accuracy_std": 0.035343900485183065
+```
+
+#### Not pre-trained
+
+```
+"train_loss_mean": 0.2676352219275762,
+"train_loss_std": 0.014189184219480759,
+"train_accuracy_mean": 0.9261217717210379,
+"train_accuracy_std": 0.004780756026425679,
+
+"val_loss_mean": 0.3983086254958766,
+"val_loss_std": 0.02044003718494854,
+"val_accuracy_mean": 0.8712536503832434,
+"val_accuracy_std": 0.008218882242723824,
+
+"test_loss_mean": 1.2667344478898865,
+"test_loss_std": 0.1342585171007094,
+"test_accuracy_mean": 0.541302246287051,
+"test_accuracy_std": 0.03968895966501664
+```
+
+### Age (101-class)
+
+#### Pre-trained
+
+foo
 
 
-### Evaluation results
+#### Not pre-trained
 
-The Adience has five folds of data. The reported metrics are the mean values of cross-validation accuracy from the five test splits.
+foo
 
-#### Adience-gender (no additional training data)
+### Age (mse)
 
-| leave-one-out | train              | val                | test               |
-| ------------- | ------------------ | ------------------ | ------------------ |
-| 0             | 0.9227379643206257 | 0.9429201555023923 | 0.7994943109987358 |
-| 1             | 0.9082845052083334 | 0.9459087401795735 | 0.9542351453855878 |
-| 2             | 0.8894158291457287 | 0.9332386363636364 | 0.9443742098609356 |
-| 3             | 0.9030612244897959 | 0.9500210437710437 | 0.9491782553729456 |
-| 4             | 0.8984999605512307 | 0.9365920805998126 | 0.9504424778761061 |
-| mean          | 0.904399896743143  | 0.941736131283292  | 0.919544879898862  |
-| std           | 0.012374353292582  | 0.006821309086719  | 0.067202767320067  |
+#### Pre-trained
 
-#### Adience-age (no additional training data)
+foo
 
-| leave-one-out | train              | val                | test               |
-| ------------- | ------------------ | ------------------ | ------------------ |
-| 0             | 0.5629353005865102 | 0.6214862440191388 | 0.4718078381795196 |
-| 1             | 0.6153738839285714 | 0.6878945707070707 | 0.770417193426043  |
-| 2             | 0.6282506281407035 | 0.6605113636363636 | 0.6950695322376739 |
-| 3             | 0.6009247448979592 | 0.6254997895622896 | 0.6986093552465233 |
-| 4             | 0.6320777666736798 | 0.6591568064667291 | 0.7494310998735777 |
-| mean          | 0.607912464845485  | 0.650909754878318  | 0.677067003792667  |
-| std           | 0.027951068889436  | 0.027565788040492  | 0.119237482897551  |
-		
+
+#### Not pre-trained
+
+foo
+
+## Deployment
+
+We also provide a production-ready model and code. This model is trained on all of the three datasets (i.e. `Adience`, `IMDB`, and `WIKI`). The training was done on the random 90% of the samples and the remaining 10% of the samples were used as a validation split. There is no test split, since we aren't reporting to some benchmark.
+
+The deployed app is a simple flask server app with one endpoint. This endpoint takes one 512-dimensional arcface embedding vector and outputs the gender probability and estimated age.  
+
+We also wrap this with a docker container. There are two docker files. `Dockerfile` is for CPU-only and `Dockerfile-cuda` is for GPU. The models are very lightweight. You probably don't need a GPU for this.
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
 
 ## Authors
 

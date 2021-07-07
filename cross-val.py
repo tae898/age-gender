@@ -16,13 +16,6 @@ from torch.cuda.amp import autocast
 from pprint import pprint
 import pickle
 
-# fix random seeds for reproducibility
-SEED = 42
-torch.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-np.random.seed(SEED)
-
 
 def train(config):
     logger = config.get_logger('train')
@@ -214,36 +207,45 @@ def test(config, checkpoint):
 def main(config_path):
     config_dict = read_json(config_path)
     num_cross_val = config_dict['num_cross_val']
+    SEEDS = config_dict['seeds']
 
     to_dump = {'config': config_dict}
-    to_dump['stats'] = {split: {} for split in ['train', 'val', 'test']}
+    to_dump['stats'] = {}
 
-    for i in tqdm(range(num_cross_val)):
-        config_dict['data_loader']['args']['test_cross_val'] = i
-        config = ConfigParser(config_dict)
-        train(config)
-        logs = train_to_dump(config, checkpoint=os.path.join(
-            config.save_dir, 'model_best.pth'))
-        to_dump['stats']['train'].update({i: logs['train']})
-        to_dump['stats']['val'].update({i: logs['val']})
+    for SEED in SEEDS:
+        # fix random seeds for reproducibility
+        torch.manual_seed(SEED)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        np.random.seed(SEED)
 
-        log = test(config, checkpoint=os.path.join(
-            config.save_dir, 'model_best.pth'))
+        to_dump['stats'][SEED] = {split: {}
+                                  for split in ['train', 'val', 'test']}
 
-        to_dump['stats']['test'].update({i: log})
+        for i in tqdm(range(num_cross_val)):
+            config_dict['data_loader']['args']['test_cross_val'] = i
+            config = ConfigParser(config_dict)
+            train(config)
+            logs = train_to_dump(config, checkpoint=os.path.join(
+                config.save_dir, 'model_best.pth'))
+            to_dump['stats'][SEED]['train'].update({i: logs['train']})
+            to_dump['stats'][SEED]['val'].update({i: logs['val']})
 
-        pprint(to_dump['stats'])
+            log = test(config, checkpoint=os.path.join(
+                config.save_dir, 'model_best.pth'))
+
+            to_dump['stats'][SEED]['test'].update({i: log})
+
+            pprint(to_dump['stats'][SEED])
 
     for split in ['train', 'val', 'test']:
         for metric in ['loss', 'accuracy']:
-            to_dump['stats'][split][f'{split}_{metric}_mean'] = \
-                np.mean([to_dump['stats'][split][i][metric]
-                         for i in range(num_cross_val)])
+            to_dump['stats'][f'{split}_{metric}_mean'] = np.mean(
+                [to_dump['stats'][SEED][split][i][metric] for SEED in SEEDS for i in range(num_cross_val)])
 
-            to_dump['stats'][split][f'{split}_{metric}_std'] = \
-                np.std([to_dump['stats'][split][i][metric]
-                        for i in range(num_cross_val)])
-
+            to_dump['stats'][f'{split}_{metric}_std'] = np.std(
+                [to_dump['stats'][SEED][split][i][metric] for SEED in SEEDS for i in range(num_cross_val)])
+                
     filepath = os.path.join(config_dict['trainer']['save_dir'],
                             datetime.now().strftime(r'%m%d_%H%M%S') + '_cross-val-results.json')
     write_json(to_dump, filepath)
@@ -252,7 +254,7 @@ def main(config_path):
 if __name__ == '__main__':
     args = argparse.ArgumentParser(
         description='cross validation on adience dataset')
-    args.add_argument('-c', '--config', default="config-cross-val.json", type=str,
+    args.add_argument('-c', '--config', default="cross-val.json", type=str,
                       help='config file path (default: None)')
 
     config_path = args.parse_args().config

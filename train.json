@@ -1,12 +1,16 @@
 {
-    "name": "MLPAge",
-    "n_gpu": 0,
+    "name": "ResMLP",
+    "n_gpu": 1,
+    "amp": true,
+    "checkpoint": null,
     "arch": {
-        "type": "MLPAge",
+        "type": "ResMLP",
         "args": {
-            "num_classes": 2,
-            "dropout": 0.5,
-            "num_layers": 5
+            "dropout": 0.2,
+            "num_residuals_per_block": 1,
+            "num_blocks": 2,
+            "num_classes": 8,
+            "num_initial_features": 512
         }
     },
     "data_loader": {
@@ -17,15 +21,15 @@
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
-            "dataset": "Adience",
-            "test_cross_val": 4
+            "dataset": "imdb_wiki",
+            "num_classes": 8
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.001,
-            "weight_decay": 0.1
+            "lr": 0.00297539,
+            "weight_decay": 8.17165e-05
         }
     },
     "loss": "cse",
@@ -33,14 +37,13 @@
         "accuracy"
     ],
     "lr_scheduler": {
-        "type": "StepLR",
+        "type": "ExponentialLR",
         "args": {
-            "step_size": 5,
-            "gamma": 0.1
+            "gamma": 0.089062
         }
     },
     "trainer": {
-        "epochs": 50,
+        "epochs": 10,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
