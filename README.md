@@ -250,12 +250,53 @@ There are three training steps involved.
 
 #### Pre-trained
 
-foo
+```
+"train_loss_mean": 0.2177276595641424,
+"train_loss_std": 0.00937389201247591,
+"train_accuracy_mean": 0.9369813516215164,
+"train_accuracy_std": 0.003651313385947366,
+"train_accuracy_relaxed_mean": 0.9369813516215164,
+"train_accuracy_relaxed_std": 0.003651313385947366,
 
+"val_loss_mean": 0.33898204408896293,
+"val_loss_std": 0.02523015861325991,
+"val_accuracy_mean": 0.8866003916678595,
+"val_accuracy_std": 0.009035207888790999,
+"val_accuracy_relaxed_mean": 0.8866003916678595,
+"val_accuracy_relaxed_std": 0.009035207888790999,
+
+"test_loss_mean": 1.1702293577302296,
+"test_loss_std": 0.09078819056921608,
+"test_accuracy_mean": 0.5968146313253844,
+"test_accuracy_std": 0.03471874719461086,
+"test_accuracy_relaxed_mean": 0.5968146313253844,
+"test_accuracy_relaxed_std": 0.03471874719461086
+```
 
 #### Not pre-trained
 
-foo
+```
+"train_loss_mean": 0.2061181211748038,
+"train_loss_std": 0.011281717093875578,
+"train_accuracy_mean": 0.94325455176554,
+"train_accuracy_std": 0.004398384245200454,
+"train_accuracy_relaxed_mean": 0.94325455176554,
+"train_accuracy_relaxed_std": 0.004398384245200454,
+
+"val_loss_mean": 0.3691450971710101,
+"val_loss_std": 0.028719334828979818,
+"val_accuracy_mean": 0.8801897830465631,
+"val_accuracy_std": 0.008885911812571767,
+"val_accuracy_relaxed_mean": 0.8801897830465631,
+"val_accuracy_relaxed_std": 0.008885911812571767,
+
+"test_loss_mean": 1.3502018664400444,
+"test_loss_std": 0.1500275279723875,
+"test_accuracy_mean": 0.5427828841087027,
+"test_accuracy_std": 0.04030558887794543,
+"test_accuracy_relaxed_mean": 0.5427828841087027,
+"test_accuracy_relaxed_std": 0.04030558887794543
+```
 
 ### Age (mse)
 
