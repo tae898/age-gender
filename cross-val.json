@@ -10,14 +10,14 @@
     "name": "ResMLP",
     "n_gpu": 1,
     "amp": true,
-    "checkpoint": "saved/models/ResMLP/0707_230125/model_best.pth",
+    "checkpoint": "saved/models/ResMLP/0708_001810/model_best.pth",
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": 0.2,
-            "num_residuals_per_block": 1,
-            "num_blocks": 2,
-            "num_classes": 8,
+            "dropout": 0,
+            "num_residuals_per_block": 3,
+            "num_blocks": 1,
+            "num_classes": 101,
             "num_initial_features": 512
         }
     },
@@ -25,29 +25,30 @@
         "type": "AgeDataLoader",
         "args": {
             "data_dir": "data/",
-            "batch_size": 65,
+            "batch_size": 256,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
             "dataset": "Adience",
-            "num_classes": 8
+            "num_classes": 101
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.00297539,
-            "weight_decay": 8.17165e-05
+            "lr": 0.0006055098539300354,
+            "weight_decay": 2.3145798905204858e-07
         }
     },
     "loss": "cse",
     "metrics": [
-        "accuracy"
+        "accuracy",
+        "accuracy_relaxed"
     ],
     "lr_scheduler": {
         "type": "ExponentialLR",
         "args": {
-            "gamma": 0.089062
+            "gamma": 3.2413268041956336e-05
         }
     },
     "trainer": {

@@ -31,6 +31,33 @@ def accuracy(output, target):
         correct += torch.sum(pred == target).item()
     return correct / len(target)
 
+def accuracy_relaxed(output, target):
+    with torch.no_grad():
+        pred = torch.argmax(output, dim=1)
+        assert pred.shape[0] == len(target)
+
+        correct = 0
+        for p, t in zip(pred, target):
+            if (0 <= p <= 2) and (0 <= t <= 2):
+                correct+=1
+            elif (4 <= p <= 6) and (4 <= t <= 6):
+                correct+=1
+            elif (8 <= p <= 12) and (8 <= t <= 12):
+                correct+=1
+            elif (15 <= p <= 20) and (15 <= t <= 20):
+                correct+=1
+            elif (25 <= p <= 32) and (25 <= t <= 32):
+                correct+=1
+            elif (38 <= p <= 43) and (38 <= t <= 43):
+                correct+=1
+            elif (48 <= p <= 53) and (48 <= t <= 53):
+                correct+=1
+            elif (60 <= p <= 100) and (60 <= t <= 100):
+                correct+=1
+            else:
+                pass
+    return correct / len(target)
+
 
 def top_k_acc(output, target, k=3):
     with torch.no_grad():
