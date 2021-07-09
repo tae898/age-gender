@@ -133,3 +133,4 @@ dmypy.json
 
 # pytorh models
 saved/
+*.pth

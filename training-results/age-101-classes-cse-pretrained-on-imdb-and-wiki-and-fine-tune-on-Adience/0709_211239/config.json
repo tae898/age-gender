@@ -1,0 +1,68 @@
+{
+    "num_cross_val": 5,
+    "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "name": "ResMLP",
+    "n_gpu": 1,
+    "amp": true,
+    "checkpoint": "training-results/age-101-classes-cse-train-on-imdb-and-wiki/model_best.pth",
+    "arch": {
+        "type": "ResMLP",
+        "args": {
+            "dropout": 0.05,
+            "num_residuals_per_block": 2,
+            "num_blocks": 0,
+            "num_classes": 101,
+            "num_initial_features": 512,
+            "last_activation": null,
+            "min_bound": null,
+            "max_bound": null
+        }
+    },
+    "data_loader": {
+        "type": "AgeDataLoader",
+        "args": {
+            "data_dir": "data/",
+            "batch_size": 512,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 8,
+            "dataset": "Adience",
+            "num_classes": 101,
+            "test_cross_val": 3,
+            "training": true
+        }
+    },
+    "optimizer": {
+        "type": "AdamW",
+        "args": {
+            "lr": 0.0003142880890840113,
+            "weight_decay": 4.335281794951561e-08
+        }
+    },
+    "loss": "cse",
+    "metrics": [
+        "accuracy",
+        "accuracy_relaxed"
+    ],
+    "lr_scheduler": {
+        "type": "ExponentialLR",
+        "args": {
+            "gamma": 3.5113563139704043e-07
+        }
+    },
+    "trainer": {
+        "epochs": 10,
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 10,
+        "tensorboard": true
+    }
+}

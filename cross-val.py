@@ -14,7 +14,6 @@ import os
 from datetime import datetime
 from torch.cuda.amp import autocast
 from pprint import pprint
-import pickle
 
 
 def train(config):
@@ -239,7 +238,7 @@ def main(config_path):
             pprint(to_dump['stats'][SEED])
 
     for split in ['train', 'val', 'test']:
-        for metric in ['loss', 'accuracy', 'accuracy_relaxed']:
+        for metric in ['loss'] + config['metrics']:
             to_dump['stats'][f'{split}_{metric}_mean'] = np.mean(
                 [to_dump['stats'][SEED][split][i][metric] for SEED in SEEDS for i in range(num_cross_val)])
 

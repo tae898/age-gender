@@ -63,7 +63,7 @@ def train(config):
 
     trainloader = DataLoader(
         data_dir=config['data_dir'], batch_size=config['batch_size'], shuffle=True,
-        validation_split=0.1, num_workers=config['cpus'], dataset=config['dataset'],
+        validation_split=config['validation_split'], num_workers=config['cpus'], dataset=config['dataset'],
         num_classes=config['num_classes'], test_cross_val=None, training=None,
         limit_data=config['limit_data'])
 
@@ -101,7 +101,7 @@ def train(config):
         val_loss = 0.0
         val_steps = 0
         total = 0
-        # correct = 0
+        correct = 0
 
         for val_batch_idx, (inputs, labels) in enumerate(valloader):
             with torch.no_grad():
@@ -115,9 +115,9 @@ def train(config):
                     outputs = net(inputs)
                     loss = criterion(outputs, labels)
 
-                # _, predicted = torch.max(outputs.data, 1)
+                _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
-                # correct += (predicted == labels).sum().item()
+                correct += (predicted == labels).sum().item()
 
                 val_loss += loss.cpu().numpy()
                 val_steps += 1
@@ -126,7 +126,7 @@ def train(config):
             path = os.path.join(checkpoint_dir, "checkpoint")
             torch.save((net.state_dict(), optimizer.state_dict()), path)
 
-        tune.report(loss=(val_loss / val_steps))
+        tune.report(loss=(val_loss / val_steps), accuracy=correct / total)
 
         lr_scheduler.step()
 
@@ -153,7 +153,7 @@ def main(config_path):
 
     reporter = CLIReporter(
         # parameter_columns=["l1", "l2", "lr", "batch_size"],
-        metric_columns=["loss", "training_iteration"])
+        metric_columns=["loss", "accuracy", "training_iteration"])
 
     result = tune.run(
         partial(train),
@@ -168,8 +168,8 @@ def main(config_path):
     print("Best trial config: {}".format(best_trial.config))
     print("Best trial final validation loss: {}".format(
         best_trial.last_result["loss"]))
-    # print("Best trial final validation accuracy: {}".format(
-    #     best_trial.last_result["accuracy"]))
+    print("Best trial final validation accuracy: {}".format(
+        best_trial.last_result["accuracy"]))
 
     best_trained_model = ResMLP(dropout=best_trial.config['dropout'],
                                 num_residuals_per_block=best_trial.config['num_residuals_per_block'],

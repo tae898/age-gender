@@ -10,40 +10,40 @@
     "name": "ResMLP",
     "n_gpu": 1,
     "amp": true,
-    "checkpoint": "saved/models/ResMLP/0708_182006/model_best.pth",
+    "checkpoint": null,
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": 0.2,
-            "num_residuals_per_block": 1,
-            "num_blocks": 2,
-            "num_classes": 1,
+            "dropout": 0.05,
+            "num_residuals_per_block": 2,
+            "num_blocks": 0,
+            "num_classes": 101,
             "num_initial_features": 512,
-            "last_activation": "LinearBounded",
-            "min_bound": 0,
-            "max_bound": 100
+            "last_activation": null,
+            "min_bound": null,
+            "max_bound": null
         }
     },
     "data_loader": {
         "type": "AgeDataLoader",
         "args": {
             "data_dir": "data/",
-            "batch_size": 65,
+            "batch_size": 512,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
             "dataset": "Adience",
-            "num_classes": 1
+            "num_classes": 101
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.017249321573179006,
-            "weight_decay": 5.820013372709849e-07
+            "lr": 0.0003142880890840113,
+            "weight_decay": 4.335281794951561e-08
         }
     },
-    "loss": "mse",
+    "loss": "cse",
     "metrics": [
         "accuracy",
         "accuracy_relaxed"
@@ -51,7 +51,7 @@
     "lr_scheduler": {
         "type": "ExponentialLR",
         "args": {
-            "gamma": 0.0925681899206688
+            "gamma": 3.5113563139704043e-07
         }
     },
     "trainer": {

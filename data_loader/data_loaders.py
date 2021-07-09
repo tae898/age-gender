@@ -1,3 +1,4 @@
+from torch._C import Value
 from torchvision import datasets, transforms
 from base import BaseDataLoader
 import torch
@@ -10,7 +11,7 @@ import random
 class GenderDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=0, limit_data=None):
+                 test_cross_val=None, limit_data=None):
         logging.info(f"test cross val is {test_cross_val}")
         if dataset.lower() == 'adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
@@ -70,7 +71,7 @@ class GenderDataset(torch.utils.data.Dataset):
 class AgeDataset(torch.utils.data.Dataset):
 
     def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=0, num_classes=8, limit_data=None):
+                 test_cross_val=None, num_classes=None, limit_data=None):
         logging.info(f"test cross val is {test_cross_val}")
 
         if num_classes == 8:
@@ -78,8 +79,13 @@ class AgeDataset(torch.utils.data.Dataset):
                             40.5: 5, 50.5: 6, 80.0: 7}
         elif num_classes == 101:
             self.age_map = {i: i for i in range(101)}
-        else:
+        elif num_classes == 1:
+            logging.warning(f"You are to solve a regression task, instead of "
+                            f"classification. I've tried this already and it "
+                            f"doesn't perform so well.")
             self.age_map = None
+        else:
+            raise ValueError
 
         if dataset == 'Adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
@@ -138,8 +144,10 @@ class AgeDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         x = self.data[idx]['embedding']
-        # y = self.age_map[self._get_closest_age(self.data[idx]['age'])]
-        y = np.float32([self.data[idx]['age']])
+        if self.age_map is None:
+            y = np.float32([self.data[idx]['age']])
+        else:
+            y = self.age_map[self._get_closest_age(self.data[idx]['age'])]
 
         return x, y
 
@@ -148,6 +156,8 @@ class GenderDataLoader(BaseDataLoader):
     def __init__(self, data_dir, batch_size, shuffle, validation_split,
                  num_workers, dataset, num_classes, training, test_cross_val=None,
                  limit_data=None):
+
+        assert num_classes == 2
 
         self.dataset = GenderDataset(data_dir=data_dir, dataset=dataset,
                                      test_cross_val=test_cross_val,

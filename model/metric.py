@@ -1,6 +1,16 @@
 import torch
 
+
 def accuracy(output, target):
+    with torch.no_grad():
+        pred = torch.argmax(output, dim=1)
+        assert pred.shape[0] == len(target)
+        correct = 0
+        correct += torch.sum(pred == target).item()
+    return correct / len(target)
+
+
+def accuracy_mse(output, target):
     with torch.no_grad():
         assert len(output) == len(target)
         correct = 0
@@ -9,15 +19,6 @@ def accuracy(output, target):
 
 
 def accuracy_relaxed(output, target):
-    # [0, 3)
-    # [3, 7)
-    # [7, 13.5)
-    # [13.5, 22.5)
-    # [22.5, 35)
-    # [35, 45.5)
-    # [45.5, 56.5)
-    # [56.5, 100]
-
     with torch.no_grad():
         pred = torch.argmax(output, dim=1)
         assert pred.shape[0] == len(target)
@@ -43,6 +44,7 @@ def accuracy_relaxed(output, target):
             else:
                 pass
     return correct / len(target)
+
 
 def top_k_acc(output, target, k=3):
     with torch.no_grad():

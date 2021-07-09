@@ -99,7 +99,8 @@ class DownSample(nn.Module):
 
 class ResMLP(BaseModel):
     def __init__(self, dropout, num_residuals_per_block, num_blocks, num_classes,
-                 num_initial_features, last_activation=None, min_bound=None, max_bound=None):
+                 num_initial_features, last_activation=None, min_bound=None, 
+                 max_bound=None):
         super().__init__()
 
         blocks = []
@@ -118,8 +119,6 @@ class ResMLP(BaseModel):
             blocks.append(LinearBounded(min_bound=min_bound, max_bound=max_bound))
         elif last_activation == 'SigmoidBounded':
             blocks.append(SigmoidBounded(min_bound=min_bound, max_bound=max_bound))
-        else:
-            raise ValueError
 
         self.blocks = nn.Sequential(*blocks)
 

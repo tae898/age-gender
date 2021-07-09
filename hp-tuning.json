@@ -1,47 +1,41 @@
 {
-    "last_activation": "SigmoidBounded",
-    "min_bound": 0,
-    "max_bound": 100,
-    "criterion": "mse",
+    "last_activation": null,
+    "min_bound": null,
+    "max_bound": null,
+    "criterion": "cse",
     "gender_or_age": "age",
     "dropout": [
-        0,
-        0.1,
-        0.2
+        0.05
     ],
     "num_residuals_per_block": [
-        1,
-        2,
-        3
+        2
     ],
     "num_blocks": [
-        1,
-        2,
-        3
+        0
     ],
     "batch_size": [
-        64,
-        128
+        512
     ],
     "lr": [
-        1e-4,
-        1e-2
+        1e-6,
+        1e-3
     ],
     "weight_decay": [
         1e-8,
-        1e-6
+        1e-5
     ],
     "gamma": [
-        1e-3,
-        1e-1
+        1e-7,
+        1e-4
     ],
     "data_dir": "/home/tk/repos/age-gender/data",
     "cpus": 8,
     "dataset": "imdb_wiki",
-    "num_samples": 20,
+    "num_samples": 10,
     "max_num_epochs": 10,
     "gpus_per_trial": 1,
     "limit_data": null,
     "amp": true,
-    "num_classes": 1
+    "num_classes": 101,
+    "validation_split": 0.1
 }

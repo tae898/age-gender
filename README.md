@@ -163,7 +163,7 @@ There are three training steps involved.
 
 1. Five random seeds on 5-fold cross-validation on the `Adience` dataset. 
 
-    Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. 
+    Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. See `cross-val.json` for the details.
 
 ## Evaluation results
 
@@ -297,21 +297,6 @@ There are three training steps involved.
 "test_accuracy_relaxed_mean": 0.5427828841087027,
 "test_accuracy_relaxed_std": 0.04030558887794543
 ```
-
-### Age (mse) LinearBounded
-
-**GARBAGE**
-
-### Age (mse) SigmoidBounded
-
-#### Pre-trained
-
-foo
-
-
-#### Not pre-trained
-
-foo
 
 ## Deployment
 
