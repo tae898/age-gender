@@ -45,7 +45,7 @@ def main(config):
     total_metrics = torch.zeros(len(metric_fns))
 
     with torch.no_grad():
-        for i, (data, target) in enumerate(tqdm(data_loader)):
+        for i, (data, target) in tqdm(enumerate(data_loader)):
             data, target = data.to(device), target.to(device)
             output = model(data)
 

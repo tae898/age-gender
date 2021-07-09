@@ -298,7 +298,11 @@ There are three training steps involved.
 "test_accuracy_relaxed_std": 0.04030558887794543
 ```
 
-### Age (mse)
+### Age (mse) LinearBounded
+
+**GARBAGE**
+
+### Age (mse) SigmoidBounded
 
 #### Pre-trained
 

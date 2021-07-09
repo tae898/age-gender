@@ -29,7 +29,10 @@ def train(config):
                  num_residuals_per_block=config['num_residuals_per_block'],
                  num_blocks=config['num_blocks'],
                  num_classes=config['num_classes'],
-                 num_initial_features=512)
+                 num_initial_features=512,
+                 last_activation=config['last_activation'],
+                 min_bound=config['min_bound'],
+                 max_bound=config['max_bound'])
 
     device = "cpu"
     if torch.cuda.is_available():
@@ -38,7 +41,13 @@ def train(config):
             net = nn.DataParallel(net)
     net.to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    if config['criterion'] == 'mse':
+        criterion = nn.MSELoss()
+    elif config['criterion'] == 'cse':
+        criterion = nn.CrossEntropyLoss()
+    else:
+        raise ValueError
+
     optimizer = optim.AdamW(
         net.parameters(), lr=config["lr"], weight_decay=config['weight_decay'])
 
@@ -79,9 +88,6 @@ def train(config):
 
             loss.backward()
             optimizer.step()
-
-            running_loss += loss.item()
-            epoch_steps += 1
 
             # print statistics
             running_loss += loss.item()
@@ -169,7 +175,11 @@ def main(config_path):
                                 num_residuals_per_block=best_trial.config['num_residuals_per_block'],
                                 num_blocks=best_trial.config['num_blocks'],
                                 num_classes=best_trial.config['num_classes'],
-                                num_initial_features=512)
+                                num_initial_features=512,
+                                last_activation=config['last_activation'],
+                                min_bound=config['min_bound'],
+                                max_bound=config['max_bound'])
+
     device = "cpu"
     if torch.cuda.is_available():
         device = "cuda:0"

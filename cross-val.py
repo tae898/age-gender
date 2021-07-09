@@ -109,7 +109,7 @@ def train_to_dump(config, checkpoint):
         total_metrics = torch.zeros(len(metric_fns))
 
         with torch.no_grad():
-            for i, (data, target) in enumerate(tqdm(dl)):
+            for i, (data, target) in tqdm(enumerate(dl)):
                 data, target = data.to(device), target.to(device)
 
                 if config['amp']:
@@ -178,7 +178,7 @@ def test(config, checkpoint):
     total_metrics = torch.zeros(len(metric_fns))
 
     with torch.no_grad():
-        for i, (data, target) in enumerate(tqdm(data_loader)):
+        for i, (data, target) in tqdm(enumerate(data_loader)):
             data, target = data.to(device), target.to(device)
 
             if config['amp']:

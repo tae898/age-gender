@@ -1,7 +1,37 @@
+from torch._C import Value
 import torch.nn as nn
 import torch.nn.functional as F
 from base import BaseModel
 import torch
+
+
+class LinearBounded(nn.Module):
+    def __init__(self, min_bound, max_bound):
+        super().__init__()
+
+        assert min_bound < max_bound
+
+        self.min_bound = min_bound
+        self.max_bound = max_bound
+
+    def forward(self, x):
+
+        return torch.clamp(x, min=self.min_bound, max=self.max_bound)
+
+
+class SigmoidBounded(nn.Module):
+
+    def __init__(self, min_bound, max_bound):
+        super().__init__()
+
+        assert min_bound < max_bound
+
+        self.min_bound = min_bound
+        self.max_bound = max_bound
+
+    def forward(self, x):
+
+        return torch.sigmoid(x) * (self.max_bound - self.min_bound) + self.min_bound
 
 
 class Residual(nn.Module):
@@ -69,7 +99,7 @@ class DownSample(nn.Module):
 
 class ResMLP(BaseModel):
     def __init__(self, dropout, num_residuals_per_block, num_blocks, num_classes,
-                 num_initial_features):
+                 num_initial_features, last_activation=None, min_bound=None, max_bound=None):
         super().__init__()
 
         blocks = []
@@ -83,6 +113,13 @@ class ResMLP(BaseModel):
             num_initial_features //= 2
 
         blocks.append(nn.Linear(num_initial_features, num_classes))
+
+        if last_activation == 'LinearBounded':
+            blocks.append(LinearBounded(min_bound=min_bound, max_bound=max_bound))
+        elif last_activation == 'SigmoidBounded':
+            blocks.append(SigmoidBounded(min_bound=min_bound, max_bound=max_bound))
+        else:
+            raise ValueError
 
         self.blocks = nn.Sequential(*blocks)
 

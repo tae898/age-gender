@@ -79,7 +79,7 @@ class AgeDataset(torch.utils.data.Dataset):
         elif num_classes == 101:
             self.age_map = {i: i for i in range(101)}
         else:
-            raise NotImplementedError
+            self.age_map = None
 
         if dataset == 'Adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
@@ -138,7 +138,8 @@ class AgeDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         x = self.data[idx]['embedding']
-        y = self.age_map[self._get_closest_age(self.data[idx]['age'])]
+        # y = self.age_map[self._get_closest_age(self.data[idx]['age'])]
+        y = np.float32([self.data[idx]['age']])
 
         return x, y
 
