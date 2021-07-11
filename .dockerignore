@@ -1,0 +1,7 @@
+__pycache__/
+.ipynb_checkpoints/
+.trash/
+test-images/
+training-results/
+*.ipynb
+data/
