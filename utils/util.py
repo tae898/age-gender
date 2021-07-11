@@ -191,32 +191,32 @@ def get_Adience_image_paths(image_type='aligned', resize=False):
     return image_paths, folds, header, ages, genders, fold_from, logs
 
 
-def choose_one_face(image_path, list_of_fa, method='center'):
-    logging.debug(f"number of faces is {len(list_of_fa)}")
+def choose_one_face(image_path, list_of_fdr, method='center'):
+    logging.debug(f"number of faces is {len(list_of_fdr)}")
 
     if method == 'biggest':
-        bbox_size = [fa['bbox'] for fa in list_of_fa]
+        bbox_size = [fdr['bbox'] for fdr in list_of_fdr]
         bbox_size = [(bbox[2] - bbox[0])*(bbox[3] - bbox[1])
                      for bbox in bbox_size]
         idx = np.argmax(bbox_size)
-        fa = list_of_fa[idx]
+        fdr = list_of_fdr[idx]
 
     elif method == 'center':
         img = Image.open(image_path)
         width, height = img.size
         image_center = height // 2, width // 2
-        bbox_centers = [fa['bbox'] for fa in list_of_fa]
+        bbox_centers = [fdr['bbox'] for fdr in list_of_fdr]
         bbox_centers = [((bbox[2] + bbox[0]) // 2, (bbox[3] - bbox[1]) // 2)
                         for bbox in bbox_centers]
         logging.debug(f"{bbox_centers}, {image_center}")
         dists = [np.linalg.norm(np.array(bbox) - np.array(image_center))
                  for bbox in bbox_centers]
         idx = np.argmin(dists)
-        fa = list_of_fa[idx]
+        fdr = list_of_fdr[idx]
     else:
         raise ValueError
 
-    return fa
+    return fdr
 
 
 def get_nearest_number(query, predefined=[28.5, 40.5, 5.0, 80.0, 17.5, 50.5, 10.0, 1.0]):
@@ -242,7 +242,7 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None, det_s
     logging.info(f"removing Nones from the data ...")
 
     assert len(image_paths) == len(ages) == len(genders) == len(fold_from)
-    image_paths_, ages_, genders_, fa_paths_, fold_from_, embeddings_ = [], [], [], [], [], []
+    image_paths_, ages_, genders_, fdr_paths_, fold_from_, embeddings_ = [], [], [], [], [], []
 
     removals = {}
     removals['no_image_path'] = 0
@@ -266,13 +266,13 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None, det_s
         if l is None:
             removals['no_fold'] += 1
             continue
-        fa_path = i + '.pkl'
+        fdr_path = i + '.pkl'
 
-        if not os.path.isfile(fa_path):
+        if not os.path.isfile(fdr_path):
             removals['no_embeddings'] += 1
             continue
 
-        with open(fa_path, 'rb') as stream:
+        with open(fdr_path, 'rb') as stream:
             embedding = pickle.load(stream)
 
         if len(embedding) == 0:
@@ -291,19 +291,19 @@ def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None, det_s
         image_paths_.append(i)
         ages_.append(j)
         genders_.append(k)
-        fa_paths_.append(fa_path)
+        fdr_paths_.append(fdr_path)
         fold_from_.append(l)
         embeddings_.append(embedding)
 
     assert len(image_paths_) == len(ages_) == len(
-        genders_) == len(fa_paths_) == len(fold_from_) == len(embeddings_)
+        genders_) == len(fdr_paths_) == len(fold_from_) == len(embeddings_)
 
     logging.warning(f"some data removed: {removals}")
 
     if logs is not None:
         logs['removed'] = removals
 
-    return image_paths_, ages_, genders_, fa_paths_, fold_from_, embeddings_, logs
+    return image_paths_, ages_, genders_, fdr_paths_, fold_from_, embeddings_, logs
 
 
 def calc_age(taken, dob):

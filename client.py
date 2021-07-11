@@ -28,15 +28,15 @@ def main(url_face, url_age_gender, image_path):
     logging.info(f"got {response} from server!...")
     response = jsonpickle.decode(response.text)
 
-    fa_results = response['fa_results']
-    logging.info(f"{len(fa_results)} faces deteced!")
+    face_detection_recognition = response['face_detection_recognition']
+    logging.info(f"{len(face_detection_recognition)} faces deteced!")
 
-    bboxes = [fa['bbox'] for fa in fa_results]
-    det_scores = [fa['det_score'] for fa in fa_results]
-    landmarks = [fa['landmark'] for fa in fa_results]
+    bboxes = [fdr['bbox'] for fdr in face_detection_recognition]
+    det_scores = [fdr['det_score'] for fdr in face_detection_recognition]
+    landmarks = [fdr['landmark'] for fdr in face_detection_recognition]
 
     logging.debug(f"sending embeddings to server ...")
-    data = [fa['normed_embedding'] for fa in fa_results]
+    data = [fdr['normed_embedding'] for fdr in face_detection_recognition]
     data = np.array(data).reshape(-1, 512).astype(np.float32)
 
     # I wanna get rid of this pickling part but dunno how.

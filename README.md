@@ -16,15 +16,15 @@ I advise you that you run all of below in a virutal python environment.
 
 My first approach is to use arcface face embedding vectors. I think they might include some features that are relevant for age and gender.
 
-### Build the insightface docker container.
+### Build the face-detection-recognition docker container.
 
-The insturctions can be found [here](https://github.com/taeert/insightface/blob/main/README-taeert.md). 
+The insturctions can be found [here](https://github.com/taeert/face-detection-recognition/blob/main/README.md). 
 
 ### Extract the arcface face embeddings.
 
 It might take some time. 
 
-The port number `10002` is the port that the insightface docker container listens to. Set `cuda=True` in the below code snippet, if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `image-path.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
+The port number `10002` is the port that the face-detection-recognition docker container listens to. Set `cuda=True` in the below code snippet, if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `<image-path>.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
 
 Resizing image to the same shape (e.g. `resize=640` resizes every image to a black background square RGB image with the width and height being 640 pixels) dramatically increase the speed due to some mxnet stuff that I'm not a big fan of.
 
@@ -364,13 +364,23 @@ val_accuracy_relaxed:   0.5579260079373424
 "test_accuracy_relaxed_std":    0.045878284812807146
 ```
 
-## Deployment
+## Qualitative analysis
 
-We also provide a production-ready model and code. This model is trained on all of the three datasets (i.e. `Adience`, `IMDB`, and `WIKI`). The training was done on the random 90% of the samples and the remaining 10% of the samples were used as a validation split. There is no test split, since we aren't reporting to some benchmark.
+Check `./test-images` to see the model inference results on some stock images.
 
-The deployed app is a simple flask server app with one endpoint. This endpoint takes one 512-dimensional arcface embedding vector and outputs the gender probability and estimated age.  
+## Running and deploying the models
 
-We also wrap this with a docker container. There are two docker files. `Dockerfile` is for CPU-only and `Dockerfile-cuda` is for GPU. The models are very lightweight. You probably don't need a GPU for this.
+We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
+
+`app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container. Build the container by running
+
+```
+docker build -t age-gender .
+```
+
+After running the container (i.e. `docker run -it --rm -p 10003:10003 age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
+
+Note that you also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
 
 ## Contributing
 

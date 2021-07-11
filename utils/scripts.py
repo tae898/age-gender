@@ -22,9 +22,9 @@ import os
 def extract_Adience_arcface(image_type='aligned', docker_port=10002, cuda=False, resize=640):
 
     if cuda:
-        image_name = 'face-analysis-cuda'
+        image_name = 'face-detection-recognition-cuda'
     else:
-        image_name = 'face-analysis'
+        image_name = 'face-detection-recognition'
 
     container = docker.run(image=image_name,
                            gpus='all',
@@ -60,14 +60,14 @@ def extract_Adience_arcface(image_type='aligned', docker_port=10002, cuda=False,
             response = requests.post(
                 f'http://127.0.0.1:{docker_port}/', json=data)
             response = jsonpickle.decode(response.text)
-            fa_results = response['fa_results']
+            face_detection_recognition = response['face_detection_recognition']
 
-            assert fa_results is not None
+            assert face_detection_recognition is not None
 
             with open(image_path + '.pkl', 'wb') as stream:
-                pickle.dump(fa_results, stream)
+                pickle.dump(face_detection_recognition, stream)
 
-            del frame_bytestring, data, response, fa_results
+            del frame_bytestring, data, response, face_detection_recognition
         except Exception as e:
             logging.error(f"failed to process {image_path}: {e}")
             COUNT_FAIL += 1
@@ -90,7 +90,7 @@ def get_Adience_clean(image_type='aligned', resize=640, det_score=0.90):
     ages = [get_nearest_number(age) for age in ages]
     genders = [gender if gender in ['m', 'f'] else None for gender in genders]
 
-    image_paths, ages, genders, fa_paths, fold_from, embeddings, logs = remove_nones_Adience(
+    image_paths, ages, genders, fdr_paths, fold_from, embeddings, logs = remove_nones_Adience(
         image_paths, ages, genders, fold_from, logs, det_score=det_score)
 
     logs['genders'] = dict(Counter(genders))
@@ -123,9 +123,9 @@ def extract_imdb_wiki_arcface(dataset='imdb', docker_port=10002, cuda=False,
                               resize=640):
 
     if cuda:
-        image_name = 'face-analysis-cuda'
+        image_name = 'face-detection-recognition-cuda'
     else:
-        image_name = 'face-analysis'
+        image_name = 'face-detection-recognition'
 
     container = docker.run(image=image_name,
                            gpus='all',
@@ -160,14 +160,14 @@ def extract_imdb_wiki_arcface(dataset='imdb', docker_port=10002, cuda=False,
             response = requests.post(
                 f'http://127.0.0.1:{docker_port}/', json=data)
             response = jsonpickle.decode(response.text)
-            fa_results = response['fa_results']
+            face_detection_recognition = response['face_detection_recognition']
 
-            assert fa_results is not None
+            assert face_detection_recognition is not None
 
             with open(image_path + '.pkl', 'wb') as stream:
-                pickle.dump(fa_results, stream)
+                pickle.dump(face_detection_recognition, stream)
 
-            del frame_bytestring, data, response, fa_results
+            del frame_bytestring, data, response, face_detection_recognition
         except Exception as e:
             logging.error(f"failed to process {image_path}: {e}")
             COUNT_FAIL += 1
@@ -195,7 +195,7 @@ def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
     genders = []
     ages = []
     img_paths = []
-    fa_paths = []
+    fdr_paths = []
     sample_num = len(face_score)
 
     metadata = {'total_num_images': len(full_path)}
@@ -219,35 +219,35 @@ def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
             continue
 
         img_path = str(data_dir / full_path[i][0])
-        fa_path = img_path + '.pkl'
-        if not os.path.isfile(fa_path):
+        fdr_path = img_path + '.pkl'
+        if not os.path.isfile(fdr_path):
             metadata['removed']['image_not_correct'] += 1
             continue
 
-        fa = read_pickle(fa_path)
+        fdr = read_pickle(fdr_path)
 
-        if fa is None:
+        if fdr is None:
             metadata['removed']['no_embeddings']+=1
             continue
 
-        if len(fa) == 0:
+        if len(fdr) == 0:
             metadata['removed']['no_face_detected'] += 1
             continue
 
-        if len(fa) > 1:
+        if len(fdr) > 1:
             metadata['removed']['more_than_one_face'] += 1
             continue
 
-        if fa[0]['det_score'] < det_score:
+        if fdr[0]['det_score'] < det_score:
             metadata['removed']['bad_quality'] += 1
             continue
 
         genders.append({0: 'f', 1: 'm'}[int(gender[i])])
         ages.append(int(age[i]))
         img_paths.append(img_path)
-        fa_paths.append(fa_path)
+        fdr_paths.append(fdr_path)
 
-    assert len(genders) == len(ages) == len(img_paths) == len(fa_paths)
+    assert len(genders) == len(ages) == len(img_paths) == len(fdr_paths)
 
     # outputs = dict(genders=genders, ages=ages, img_paths=img_paths)
     # output_path = data_dir.joinpath(f"{dataset}.csv")
@@ -255,13 +255,13 @@ def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
 
     data = []
     logging.debug(f"Saving {dataset} embeddings ...")
-    for gender, age, img_path, fa_path in tqdm(zip(genders, ages, img_paths, fa_paths)):
-        fa = read_pickle(fa_path)
-        assert len(fa) == 1
+    for gender, age, img_path, fdr_path in tqdm(zip(genders, ages, img_paths, fdr_paths)):
+        fdr = read_pickle(fdr_path)
+        assert len(fdr) == 1
         data_sample = {'image_path': img_path,
                        'age': age,
                        'gender': gender,
-                       'embedding': fa[0]['normed_embedding']}
+                       'embedding': fdr[0]['normed_embedding']}
         data.append(data_sample)
 
     metadata['genders'] = dict(Counter(genders))
