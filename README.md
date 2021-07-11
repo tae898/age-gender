@@ -18,7 +18,7 @@ My first approach is to use arcface face embedding vectors. I think they might i
 
 ### Build the face-detection-recognition docker container.
 
-The insturctions can be found [here](https://github.com/taeert/face-detection-recognition/blob/main/README.md). 
+The insturctions can be found [here](https://github.com/tae898/face-detection-recognition/blob/main/README.md). 
 
 ### Extract the arcface face embeddings.
 
