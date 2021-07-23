@@ -1,5 +1,8 @@
+"""
+This script is specifically made for the Adience dataset, since the evaluation is 
+done with five-fold cross validation.
+"""
 import argparse
-import collections
 import torch
 import numpy as np
 import data_loader.data_loaders as module_data
@@ -12,7 +15,7 @@ from utils import prepare_device, update_lr_scheduler, read_json, write_json
 from tqdm import tqdm
 import os
 from datetime import datetime
-from torch.cuda.amp import autocast
+from torch.cuda.amp import autocast # for float16 mixed point precision
 from pprint import pprint
 
 
@@ -67,6 +70,7 @@ def train(config):
 
 
 def train_to_dump(config, checkpoint):
+    """Save train / val results."""
     logger = config.get_logger('train_to_dump')
 
     config['data_loader']['args']['training'] = True
@@ -136,6 +140,7 @@ def train_to_dump(config, checkpoint):
 
 
 def test(config, checkpoint):
+    """Save test results"""
     logger = config.get_logger('test')
 
     # setup data_loader instances

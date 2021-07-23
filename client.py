@@ -1,3 +1,6 @@
+"""
+This is just a simple client example. Hack it as much as you want. 
+"""
 import argparse
 import requests
 import jsonpickle
@@ -37,6 +40,8 @@ def main(url_face, url_age_gender, image_path):
 
     logging.debug(f"sending embeddings to server ...")
     data = [fdr['normed_embedding'] for fdr in face_detection_recognition]
+
+    # -1 accounts for the batch size.
     data = np.array(data).reshape(-1, 512).astype(np.float32)
 
     # I wanna get rid of this pickling part but dunno how.

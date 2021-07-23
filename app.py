@@ -12,8 +12,10 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
+# a light-weight flask app
 app = Flask(__name__)
 
+# load the gender model to cpu
 device = torch.device('cpu')
 model_gender = ResMLP(dropout=0.5, num_residuals_per_block=3, num_blocks=1,
                       num_classes=2, num_initial_features=512, last_activation=None,
@@ -26,6 +28,7 @@ model_gender.load_state_dict(state_dict)
 model_gender.to(device)
 model_gender.eval()
 
+# load the age model to cpu
 model_age = ResMLP(dropout=0.2, num_residuals_per_block=4, num_blocks=0,
                    num_classes=101, num_initial_features=512, last_activation=None,
                    min_bound=None, max_bound=None, only_MLP=False)
@@ -37,9 +40,9 @@ model_age.load_state_dict(state_dict)
 model_age.to(device)
 model_age.eval()
 
-
+# One endpoint is enough.
 @app.route("/", methods=["POST"])
-def extract_frames():
+def predict_age_gender():
     """
     Receive everything in json!!!
 
@@ -52,8 +55,11 @@ def extract_frames():
     embeddings = data['embeddings']
     embeddings = io.BytesIO(embeddings)
 
+    # This assumes that the client has serialized the embeddings with pickle.
+    # before sending it to the server. 
     embeddings = np.load(embeddings, allow_pickle=True)
 
+    # -1 accounts for the batch size.
     embeddings = embeddings.reshape(-1, 512).astype(np.float32)
     embeddings = torch.tensor(embeddings)
 

@@ -2,6 +2,9 @@ import torch
 
 
 def accuracy(output, target):
+    """
+    Vanilla accuracy: TP + TN / (TP + TN + FP + FN)
+    """
     with torch.no_grad():
         pred = torch.argmax(output, dim=1)
         assert pred.shape[0] == len(target)
@@ -11,6 +14,10 @@ def accuracy(output, target):
 
 
 def accuracy_mse(output, target):
+    """
+    This function was made when I was tinkering with regression rather than 
+    classification. Just ignore it.
+    """
     with torch.no_grad():
         assert len(output) == len(target)
         correct = 0
@@ -19,6 +26,12 @@ def accuracy_mse(output, target):
 
 
 def accuracy_relaxed(output, target):
+    """
+    I made this function so that 101 age classes correspond to 8 age classes,
+    for Adience dataset. Turns out this results in the same value as the vanilla 
+    accuracy. Just ignore it. 
+
+    """
     with torch.no_grad():
         pred = torch.argmax(output, dim=1)
         assert pred.shape[0] == len(target)
@@ -47,6 +60,9 @@ def accuracy_relaxed(output, target):
 
 
 def top_k_acc(output, target, k=3):
+    """
+    Not a useful metric for gender or age. Just ignore it.
+    """
     with torch.no_grad():
         pred = torch.topk(output, k, dim=1)[1]
         assert pred.shape[0] == len(target)

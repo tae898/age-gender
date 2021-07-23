@@ -8,7 +8,7 @@ import model.metric as module_metric
 import model.model as module_arch
 from parse_config import ConfigParser
 from trainer import Trainer
-from utils import prepare_device, update_lr_scheduler, read_json, write_json
+from utils import prepare_device, update_lr_scheduler
 
 
 # fix random seeds for reproducibility

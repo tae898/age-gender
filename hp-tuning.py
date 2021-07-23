@@ -1,19 +1,22 @@
+"""
+This script uses ray tune for hyper parameter optimization.
+Most of the code is copied from the below link.
+https://pytorch.org/tutorials/beginner/hyperparameter_tuning_tutorial.html
+"""
 from functools import partial
 import numpy as np
 import os
 import torch
-from torch._C import Value
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.data import random_split
 from ray import tune
 from ray.tune import CLIReporter
 from ray.tune.schedulers import ASHAScheduler
 from model.model import ResMLP
 from torch.cuda.amp import autocast
 import argparse
-from utils import read_json, write_json
+from utils import read_json
 
 # fix random seeds for reproducibility
 SEED = 42
@@ -153,7 +156,6 @@ def main(config_path):
         reduction_factor=2)
 
     reporter = CLIReporter(
-        # parameter_columns=["l1", "l2", "lr", "batch_size"],
         metric_columns=["loss", "accuracy", "training_iteration"])
 
     result = tune.run(

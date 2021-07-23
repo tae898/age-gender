@@ -147,7 +147,7 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
 
 ### Model
 
-The model is an MLP with residual connections. It's very light.
+The model is basically an MLP. There are two variants considered. One is a pure MLP and the other is MLP with [IC layers](https://arxiv.org/pdf/1905.05928.pdf). It's emperically shown that the latter is better than the pure MLP.
 
 ### Training steps
 
@@ -155,17 +155,19 @@ There are three training steps involved.
 
 1. Hyperparameter search using [Ray Tune](https://docs.ray.io/en/master/tune/index.html)
 
-    This searches dropout rate, number of residuals per block, number of blocks in the network, batch size, peak learning rate, weight decay rate, and gamma of exponential learning rate decay. See `hp-tuning.py` and `hp-tuning.json` for the details.
+    This searches dropout rate, number of residuals per block, number of blocks in the network, batch size, peak learning rate, weight decay rate, and gamma of exponential learning rate decay. Configure the values in `hp-tuning.json` and run `python hp-tuning.py`.
 
-1. Pre-training on the `IMDB` and `WIKI` dataset. 
+2. Pre-training on the `IMDB` and `WIKI` dataset. 
 
-    We'll use the optimal hyperparameters found in the step 1 to pre-train the model. See `train.py` and `train.json` for the details.
+    We'll use the optimal hyperparameters found in the step 1 to pre-train the model. Configure the values in `train.json` and run `python train.py`.
 
-1. Five random seeds on 5-fold cross-validation on the `Adience` dataset. 
+3. Five random seeds on 5-fold cross-validation on the `Adience` dataset. 
 
-    Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. See `cross-val.json` for the details.
+    Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. Configure the values in `cross-val.json` and run `python cross-val.py`.
 
 ## [Evaluation results](training-results/TRAINING-RESULTS.md)
+
+Click on the above link to see the detailed results.
 
 ## Qualitative analysis
 
@@ -173,7 +175,7 @@ Check `./test-images` to see the model inference results on some stock images.
 
 ## Running and deploying the models
 
-We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
+We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They are MLPs with dropout, batch norm, and residual connections. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
 
 `app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container. Build the container by running
 

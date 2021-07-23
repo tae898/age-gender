@@ -1,5 +1,3 @@
-from torch._C import Value
-from torchvision import datasets, transforms
 from base import BaseDataLoader
 import torch
 import numpy as np
@@ -9,6 +7,21 @@ import random
 
 
 class GenderDataset(torch.utils.data.Dataset):
+    """
+
+    There are in in total of three datasets available. They are Adience, wiki, 
+    and imdb. wiki and imdb often go togther so basically only two datasets
+    should be considered (Adience and imdb_wiki)
+
+    You should extract the arcface 512-D face embedding vectors. If you haven't,
+    go read README.md first.
+
+    Note that Adience is loaded differently from imdb_wiki since Adience 
+    officially has test split while imdb and wiki don't.
+
+    male is labeled as 0 and female is labeled as 1.
+
+    """
 
     def __init__(self, data_dir='data', dataset=None, training=True,
                  test_cross_val=None, limit_data=None):
@@ -62,6 +75,9 @@ class GenderDataset(torch.utils.data.Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
+        """
+        Return an embedding and a target label (gender).
+        """
         x = self.data[idx]['embedding']
         y = {'m': 0, 'f': 1}[self.data[idx]['gender']]
 
@@ -69,6 +85,22 @@ class GenderDataset(torch.utils.data.Dataset):
 
 
 class AgeDataset(torch.utils.data.Dataset):
+    """
+
+    There are in in total of three datasets available. They are Adience, wiki, 
+    and imdb. wiki and imdb often go togther so basically only two datasets
+    should be considered (Adience and imdb_wiki)
+
+    You should extract the arcface 512-D face embedding vectors. If you haven't,
+    go read README.md first.
+
+    Note that Adience is loaded differently from imdb_wiki since Adience 
+    officially has test split while imdb and wiki don't.
+
+    The Adience dataset has 8 age classes while the imdb and wiki datasets have
+    101 age classes.
+
+    """
 
     def __init__(self, data_dir='data', dataset=None, training=True,
                  test_cross_val=None, num_classes=None, limit_data=None):
@@ -137,13 +169,23 @@ class AgeDataset(torch.utils.data.Dataset):
         return len(self.data)
 
     def _get_closest_age(self, num):
+        """
+        Get the closest age from the possible age range.
+        """
         possible_ages = np.array([age for age in list(self.age_map.keys())])
         idx = int(np.argmin(np.abs(possible_ages - num)))
 
         return possible_ages[idx]
 
     def __getitem__(self, idx):
+        """
+        Return an embedding and a target label (age).
+        """
         x = self.data[idx]['embedding']
+
+        # In case you want to do regression in classification, the target should be
+        # a floating point number. I tried this and the result is worse with
+        # regression. Juse do classification with cross entropy loss.
         if self.age_map is None:
             y = np.float32([self.data[idx]['age']])
         else:
@@ -153,6 +195,13 @@ class AgeDataset(torch.utils.data.Dataset):
 
 
 class GenderDataLoader(BaseDataLoader):
+    """
+    Note that this data loader class is sub-classes the BaseDataLoader class, 
+    which again sub-classes the vanilla pytorch DataLoader class. See 
+    data_loader/data_loaders.py for the details.
+
+    """
+
     def __init__(self, data_dir, batch_size, shuffle, validation_split,
                  num_workers, dataset, num_classes, training, test_cross_val=None,
                  limit_data=None):
@@ -168,6 +217,13 @@ class GenderDataLoader(BaseDataLoader):
 
 
 class AgeDataLoader(BaseDataLoader):
+    """
+    Note that this data loader class is sub-classes the BaseDataLoader class, 
+    which again sub-classes the vanilla pytorch DataLoader class. See 
+    data_loader/data_loaders.py for the details.
+
+    """
+
     def __init__(self, data_dir, batch_size, shuffle, validation_split,
                  num_workers, dataset, num_classes, training, test_cross_val=None,
                  limit_data=None):

@@ -6,6 +6,14 @@ import torch
 
 
 class LinearBounded(nn.Module):
+    """
+    This custom activation function was made so that the output is always 
+    bounded within the specified range. In the range, it's just linear.
+
+    In the end I didn't use this since regression results were worse than 
+    classification results.
+    """
+
     def __init__(self, min_bound, max_bound):
         super().__init__()
 
@@ -20,6 +28,14 @@ class LinearBounded(nn.Module):
 
 
 class SigmoidBounded(nn.Module):
+    """
+    This custom activation function was made so that I can specify the
+    minimum and maximum of the sigmoid function.
+
+    In the end I didn't use this since regression results were worse than 
+    classification results.
+
+    """
 
     def __init__(self, min_bound, max_bound):
         super().__init__()
@@ -35,6 +51,14 @@ class SigmoidBounded(nn.Module):
 
 
 class Residual(nn.Module):
+    """
+    This module looks like what you find in the original resnet or IC paper     
+    (https://arxiv.org/pdf/1905.05928.pdf), except that it's based on MLP, not CNN. 
+    If you flag `only_MLP` as True, then it won't use any batch norm, dropout, or
+    residual connections 
+
+    """
+
     def __init__(self, num_features, dropout, ic_beginning=False, only_MLP=False):
         super().__init__()
         self.num_features = num_features
@@ -81,6 +105,13 @@ class Residual(nn.Module):
 
 
 class DownSample(nn.Module):
+    """
+    This module is an MLP, where the number of output features is lower than 
+    that of input features. If you flag `only_MLP` as False, it'll add norm 
+    and dropout 
+
+    """
+
     def __init__(self, in_features, out_features, dropout, only_MLP=False):
         super().__init__()
         assert in_features > out_features
@@ -110,6 +141,15 @@ class DownSample(nn.Module):
 
 
 class ResMLP(BaseModel):
+    """
+    MLP with optinally batch norm, dropout, and residual connections. I got 
+    inspiration from the original ResNet paper and https://arxiv.org/pdf/1905.05928.pdf.
+
+    Downsampling is done after every block so that the features can be encoded 
+    and compressed.
+
+    """
+
     def __init__(self, dropout, num_residuals_per_block, num_blocks, num_classes,
                  num_initial_features, last_activation=None, min_bound=None,
                  max_bound=None, only_MLP=False):
