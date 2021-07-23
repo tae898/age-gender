@@ -15,9 +15,10 @@ logging.basicConfig(
 app = Flask(__name__)
 
 device = torch.device('cpu')
-model_gender = ResMLP(dropout=0.45, num_residuals_per_block=1, num_blocks=1, num_classes=2,
-                      num_initial_features=512, last_activation=None, min_bound=None,
-                      max_bound=None)
+model_gender = ResMLP(dropout=0.5, num_residuals_per_block=3, num_blocks=1,
+                      num_classes=2, num_initial_features=512, last_activation=None,
+                      min_bound=None, max_bound=None, only_MLP=False)
+
 checkpoint = "models/gender.pth"
 checkpoint = torch.load(checkpoint, map_location=torch.device('cpu'))
 state_dict = checkpoint['state_dict']
@@ -25,9 +26,9 @@ model_gender.load_state_dict(state_dict)
 model_gender.to(device)
 model_gender.eval()
 
-model_age = ResMLP(dropout=0.05, num_residuals_per_block=2, num_blocks=0, num_classes=101,
-                   num_initial_features=512, last_activation=None, min_bound=None,
-                   max_bound=None)
+model_age = ResMLP(dropout=0.2, num_residuals_per_block=4, num_blocks=0,
+                   num_classes=101, num_initial_features=512, last_activation=None,
+                   min_bound=None, max_bound=None, only_MLP=False)
 
 checkpoint = "models/age.pth"
 checkpoint = torch.load(checkpoint, map_location=torch.device('cpu'))

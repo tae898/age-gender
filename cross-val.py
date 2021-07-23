@@ -211,7 +211,7 @@ def main(config_path):
     to_dump = {'config': config_dict}
     to_dump['stats'] = {}
 
-    for SEED in SEEDS:
+    for SEED in tqdm(SEEDS):
         # fix random seeds for reproducibility
         torch.manual_seed(SEED)
         torch.backends.cudnn.deterministic = True
@@ -221,7 +221,7 @@ def main(config_path):
         to_dump['stats'][SEED] = {split: {}
                                   for split in ['train', 'val', 'test']}
 
-        for i in tqdm(range(num_cross_val)):
+        for i in range(num_cross_val):
             config_dict['data_loader']['args']['test_cross_val'] = i
             config = ConfigParser(config_dict)
             train(config)

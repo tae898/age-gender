@@ -10,25 +10,26 @@
     "name": "ResMLP",
     "n_gpu": 1,
     "amp": true,
-    "checkpoint": null,
+    "checkpoint": "saved/models/ResMLP/0723_001214/model_best.pth",
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": 0.05,
-            "num_residuals_per_block": 2,
-            "num_blocks": 0,
+            "dropout": null,
+            "num_residuals_per_block": 1,
+            "num_blocks": 2,
             "num_classes": 101,
             "num_initial_features": 512,
             "last_activation": null,
             "min_bound": null,
-            "max_bound": null
+            "max_bound": null,
+            "only_MLP": true
         }
     },
     "data_loader": {
         "type": "AgeDataLoader",
         "args": {
             "data_dir": "data/",
-            "batch_size": 512,
+            "batch_size": 256,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
@@ -39,28 +40,27 @@
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.0003142880890840113,
-            "weight_decay": 4.335281794951561e-08
+            "lr": 0.0035753161317240803,
+            "weight_decay": 3.584710633004188e-06
         }
     },
     "loss": "cse",
     "metrics": [
-        "accuracy",
-        "accuracy_relaxed"
+        "accuracy"
     ],
     "lr_scheduler": {
         "type": "ExponentialLR",
         "args": {
-            "gamma": 3.5113563139704043e-07
+            "gamma": 0.0004325327646962347
         }
     },
     "trainer": {
-        "epochs": 10,
+        "epochs": 30,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
         "monitor": "min val_loss",
-        "early_stop": 10,
+        "early_stop": 5,
         "tensorboard": true
     }
 }

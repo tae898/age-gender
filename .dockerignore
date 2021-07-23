@@ -3,5 +3,6 @@ __pycache__/
 .trash/
 test-images/
 training-results/
+saved/
 *.ipynb
 data/

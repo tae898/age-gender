@@ -1,0 +1,68 @@
+{
+    "num_cross_val": 5,
+    "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "name": "ResMLP",
+    "n_gpu": 1,
+    "amp": true,
+    "checkpoint": null,
+    "arch": {
+        "type": "ResMLP",
+        "args": {
+            "dropout": null,
+            "num_residuals_per_block": 2,
+            "num_blocks": 2,
+            "num_classes": 2,
+            "num_initial_features": 512,
+            "last_activation": null,
+            "min_bound": null,
+            "max_bound": null,
+            "only_MLP": true
+        }
+    },
+    "data_loader": {
+        "type": "GenderDataLoader",
+        "args": {
+            "data_dir": "data/",
+            "batch_size": 256,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 8,
+            "dataset": "Adience",
+            "num_classes": 2,
+            "test_cross_val": 4,
+            "training": true
+        }
+    },
+    "optimizer": {
+        "type": "AdamW",
+        "args": {
+            "lr": 0.0010710256549997944,
+            "weight_decay": 0.04280597490713533
+        }
+    },
+    "loss": "cse",
+    "metrics": [
+        "accuracy"
+    ],
+    "lr_scheduler": {
+        "type": "ExponentialLR",
+        "args": {
+            "gamma": 0.008062359381277659
+        }
+    },
+    "trainer": {
+        "epochs": 10,
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 5,
+        "tensorboard": true
+    }
+}

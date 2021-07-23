@@ -32,7 +32,8 @@ def train(config):
                  num_initial_features=512,
                  last_activation=config['last_activation'],
                  min_bound=config['min_bound'],
-                 max_bound=config['max_bound'])
+                 max_bound=config['max_bound'],
+                 only_MLP=config['only_MLP'])
 
     device = "cpu"
     if torch.cuda.is_available():
@@ -170,28 +171,6 @@ def main(config_path):
         best_trial.last_result["loss"]))
     print("Best trial final validation accuracy: {}".format(
         best_trial.last_result["accuracy"]))
-
-    best_trained_model = ResMLP(dropout=best_trial.config['dropout'],
-                                num_residuals_per_block=best_trial.config['num_residuals_per_block'],
-                                num_blocks=best_trial.config['num_blocks'],
-                                num_classes=best_trial.config['num_classes'],
-                                num_initial_features=512,
-                                last_activation=config['last_activation'],
-                                min_bound=config['min_bound'],
-                                max_bound=config['max_bound'])
-
-    device = "cpu"
-    if torch.cuda.is_available():
-        device = "cuda:0"
-        if config['gpus_per_trial'] > 1:
-            best_trained_model = nn.DataParallel(best_trained_model)
-    best_trained_model.to(device)
-
-    best_checkpoint_dir = best_trial.checkpoint.value
-    model_state, optimizer_state = torch.load(os.path.join(
-        best_checkpoint_dir, "checkpoint"))
-    best_trained_model.load_state_dict(model_state)
-
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser(description='hp-tuning')
