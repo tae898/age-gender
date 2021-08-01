@@ -14,17 +14,28 @@ I also used [the IMDB-WIKI dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/im
 
 I advise you that you run all of below in a virutal python environment.
 
-My first approach is to use arcface face embedding vectors. I think they might include some features that are relevant for age and gender.
 
-### Build the face-detection-recognition docker container.
+### Pull and run the face-detection-recognition docker container.
 
-The insturctions can be found [here](https://github.com/tae898/face-detection-recognition/blob/main/README.md). 
+For the CPU model
+```bash
+docker pull tae898/face-detection-recognition:latest
+```
+
+For the GPU model
+```bash
+docker pull tae898/face-detection-recognition-cuda:latest
+```
+
+
+The detailed insturctions can be found [here](https://github.com/tae898/face-detection-recognition/blob/main/README.md).
+
 
 ### Extract the arcface face embeddings.
 
 It might take some time. 
 
-The port number `10002` is the port that the face-detection-recognition docker container listens to. Set `cuda=True` in the below code snippet, if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `<image-path>.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
+The port number `10002` is the port that the `face-detection-recognition` docker container listens to. Set `cuda=True` in the below code snippet, if you want to run on a NVIDIA GPU). The face embedding vectors are pickled. They are saved as `<image-path>.pkl` (e.g. `landmark_aligned_face.2174.9523333835_c7887c3fde_o.jpg.RESIZED.pkl`). 
 
 Resizing image to the same shape (e.g. `resize=640` resizes every image to a black background square RGB image with the width and height being 640 pixels) dramatically increase the speed due to some mxnet stuff that I'm not a big fan of.
 
@@ -173,19 +184,40 @@ Click on the above link to see the detailed results.
 
 Check `./test-images` to see the model inference results on some stock images.
 
-## Running and deploying the models
+## Deployment (server)
 
 We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They are MLPs with dropout, batch norm, and residual connections. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
 
 `app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container. Build the container by running
 
-```
-docker build -t age-gender .
-```
+
+### Run it as a docker container.
+
+1. Pull the image from docker hub and run the container.
+    ```bash
+    docker run -it --rm -p 10003:10003 tae898/age-gender:latest
+    ```
+
+1. For whatever reason if you want to build it from scratch,
+    ```bash
+    docker build -t age-gender .  
+    ```
+
+### Run directly.
+
+1. Install the required python packages.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+1. Run `app.py`
+    ```bash
+    python3 app.py
+    ```
 
 After running the container (i.e. `docker run -it --rm -p 10003:10003 age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
 
-Note that you also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
+NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
 
 ## Contributing
 
