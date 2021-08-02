@@ -15,13 +15,13 @@ from scipy.io import loadmat
 from datetime import datetime
 
 
-def read_pickle(pickle_path):
+def read_pickle(pickle_path: str):
     with open(pickle_path, 'rb') as stream:
         foo = pickle.load(stream)
     return foo
 
 
-def update_lr_scheduler(config, train_dataloader_size):
+def update_lr_scheduler(config: dict, train_dataloader_size: int):
     """
     Update the key values in the dict so that the lr_scheduler is compatible
     with the optimizer and trainer
@@ -41,7 +41,7 @@ def update_lr_scheduler(config, train_dataloader_size):
     return config
 
 
-def expand2square(pil_img, background_color):
+def expand2square(pil_img: Image, background_color: tuple):
     width, height = pil_img.size
     if width == height:
         return pil_img
@@ -55,7 +55,7 @@ def expand2square(pil_img, background_color):
         return result
 
 
-def resize_square_image(img, width=448, background_color=(0, 0, 0)):
+def resize_square_image(img: Image, width: int = 448, background_color: tuple = (0, 0, 0)):
     if img.mode != 'RGB':
         return None
     img = expand2square(img, (0, 0, 0))
@@ -146,7 +146,7 @@ def load_Adience_labels():
     return folds, header
 
 
-def get_Adience_image_paths(image_type='aligned', resize=False):
+def get_Adience_image_paths(image_type: str = 'aligned', resize: bool = False):
     logging.info(f"getting Adience image paths ...")
 
     folds, header = load_Adience_labels()
@@ -191,7 +191,7 @@ def get_Adience_image_paths(image_type='aligned', resize=False):
     return image_paths, folds, header, ages, genders, fold_from, logs
 
 
-def choose_one_face(image_path, list_of_fdr, method='center'):
+def choose_one_face(image_path: str, list_of_fdr: list, method: str = 'center'):
     logging.debug(f"number of faces is {len(list_of_fdr)}")
 
     if method == 'biggest':
@@ -219,7 +219,7 @@ def choose_one_face(image_path, list_of_fdr, method='center'):
     return fdr
 
 
-def get_nearest_number(query, predefined=[28.5, 40.5, 5.0, 80.0, 17.5, 50.5, 10.0, 1.0]):
+def get_nearest_number(query: float, predefined: list = [28.5, 40.5, 5.0, 80.0, 17.5, 50.5, 10.0, 1.0]):
     # possible ages
     # 28.5
     # 40.5
@@ -237,7 +237,8 @@ def get_nearest_number(query, predefined=[28.5, 40.5, 5.0, 80.0, 17.5, 50.5, 10.
     return predefined[idx]
 
 
-def remove_nones_Adience(image_paths, ages, genders, fold_from, logs=None, det_score=0.90):
+def remove_nones_Adience(image_paths: list, ages: list, genders: list, fold_from: list,
+                         logs: list = None, det_score: float = 0.90):
 
     logging.info(f"removing Nones from the data ...")
 

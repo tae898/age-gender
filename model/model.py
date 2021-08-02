@@ -14,7 +14,7 @@ class LinearBounded(nn.Module):
     classification results.
     """
 
-    def __init__(self, min_bound, max_bound):
+    def __init__(self, min_bound: float, max_bound: float):
         super().__init__()
 
         assert min_bound < max_bound
@@ -22,7 +22,7 @@ class LinearBounded(nn.Module):
         self.min_bound = min_bound
         self.max_bound = max_bound
 
-    def forward(self, x):
+    def forward(self, x: torch.tensor) -> torch.tensor:
 
         return torch.clamp(x, min=self.min_bound, max=self.max_bound)
 
@@ -37,7 +37,7 @@ class SigmoidBounded(nn.Module):
 
     """
 
-    def __init__(self, min_bound, max_bound):
+    def __init__(self, min_bound: float, max_bound: float):
         super().__init__()
 
         assert min_bound < max_bound
@@ -45,7 +45,7 @@ class SigmoidBounded(nn.Module):
         self.min_bound = min_bound
         self.max_bound = max_bound
 
-    def forward(self, x):
+    def forward(self, x: torch.tensor) -> torch.tensor:
 
         return torch.sigmoid(x) * (self.max_bound - self.min_bound) + self.min_bound
 
@@ -59,7 +59,8 @@ class Residual(nn.Module):
 
     """
 
-    def __init__(self, num_features, dropout, ic_beginning=False, only_MLP=False):
+    def __init__(self, num_features: int, dropout: float, ic_beginning: bool = False,
+                 only_MLP: bool = False):
         super().__init__()
         self.num_features = num_features
         self.ic_beginning = ic_beginning
@@ -79,7 +80,7 @@ class Residual(nn.Module):
         self.linear2 = nn.Linear(num_features, num_features)
         self.relu2 = nn.ReLU()
 
-    def forward(self, x):
+    def forward(self, x: torch.tensor) -> torch.tensor:
 
         identity = out = x
 
@@ -112,7 +113,8 @@ class DownSample(nn.Module):
 
     """
 
-    def __init__(self, in_features, out_features, dropout, only_MLP=False):
+    def __init__(self, in_features: int, out_features: int, dropout: float,
+                 only_MLP: bool = False):
         super().__init__()
         assert in_features > out_features
 
@@ -127,7 +129,7 @@ class DownSample(nn.Module):
         self.linear = nn.Linear(in_features, out_features)
         self.relu = nn.ReLU()
 
-    def forward(self, x):
+    def forward(self, x: torch.tensor) -> torch.tensor:
         out = x
 
         if not self.only_MLP:
@@ -150,9 +152,9 @@ class ResMLP(BaseModel):
 
     """
 
-    def __init__(self, dropout, num_residuals_per_block, num_blocks, num_classes,
-                 num_initial_features, last_activation=None, min_bound=None,
-                 max_bound=None, only_MLP=False):
+    def __init__(self, dropout: float, num_residuals_per_block: int, num_blocks: int, num_classes: int,
+                 num_initial_features: int, last_activation: int = None, min_bound: float = None,
+                 max_bound: float = None, only_MLP: bool = False):
         super().__init__()
 
         blocks = []
@@ -176,7 +178,8 @@ class ResMLP(BaseModel):
 
         self.blocks = nn.Sequential(*blocks)
 
-    def _create_block(self, in_features, dropout, num_residuals_per_block, ic_beginning, only_MLP):
+    def _create_block(self, in_features: int, dropout: float,
+                      num_residuals_per_block: int, ic_beginning: bool, only_MLP: bool) -> list:
         block = []
         if num_residuals_per_block > 0:
             block.append(Residual(in_features, dropout,
@@ -189,5 +192,5 @@ class ResMLP(BaseModel):
 
         return block
 
-    def forward(self, x):
+    def forward(self, x: torch.tensor) -> torch.tensor:
         return self.blocks(x)

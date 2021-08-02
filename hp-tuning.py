@@ -26,7 +26,7 @@ torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
 
 
-def train(config):
+def train(config: dict):
 
     net = ResMLP(dropout=config['dropout'],
                  num_residuals_per_block=config['num_residuals_per_block'],
@@ -137,7 +137,7 @@ def train(config):
     print("Finished Training")
 
 
-def main(config_path):
+def main(config_path: str):
     config = read_json(config_path)
     config['dropout'] = tune.choice(config['dropout'])
     config['num_residuals_per_block'] = tune.choice(

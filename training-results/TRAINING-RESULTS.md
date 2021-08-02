@@ -245,7 +245,7 @@ saved/0722_171635_cross-val-results.json
 ```
 
 
-# Evaluation results (pure MLP)
+# Evaluation results (plain MLP)
 
 Validation split is always 10%
 

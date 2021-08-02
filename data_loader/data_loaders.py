@@ -23,8 +23,9 @@ class GenderDataset(torch.utils.data.Dataset):
 
     """
 
-    def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=None, limit_data=None):
+    def __init__(self, data_dir: str = 'data', dataset: str = None,
+                 training: bool = True,
+                 test_cross_val: int = None, limit_data: int = None):
         logging.info(f"test cross val is {test_cross_val}")
         if dataset.lower() == 'adience':
             data = np.load(os.path.join(data_dir, "Adience/data-aligned.npy"),
@@ -71,10 +72,10 @@ class GenderDataset(torch.utils.data.Dataset):
         else:
             self.data = data
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> tuple:
         """
         Return an embedding and a target label (gender).
         """
@@ -102,8 +103,8 @@ class AgeDataset(torch.utils.data.Dataset):
 
     """
 
-    def __init__(self, data_dir='data', dataset=None, training=True,
-                 test_cross_val=None, num_classes=None, limit_data=None):
+    def __init__(self, data_dir: str = 'data', dataset: str = None, training: bool = True,
+                 test_cross_val: int = None, num_classes: int = None, limit_data: int = None):
         logging.info(f"test cross val is {test_cross_val}")
 
         if num_classes == 8:
@@ -165,10 +166,10 @@ class AgeDataset(torch.utils.data.Dataset):
         else:
             self.data = data
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.data)
 
-    def _get_closest_age(self, num):
+    def _get_closest_age(self, num: float) -> float:
         """
         Get the closest age from the possible age range.
         """
@@ -177,7 +178,7 @@ class AgeDataset(torch.utils.data.Dataset):
 
         return possible_ages[idx]
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> tuple:
         """
         Return an embedding and a target label (age).
         """
@@ -202,9 +203,9 @@ class GenderDataLoader(BaseDataLoader):
 
     """
 
-    def __init__(self, data_dir, batch_size, shuffle, validation_split,
-                 num_workers, dataset, num_classes, training, test_cross_val=None,
-                 limit_data=None):
+    def __init__(self, data_dir: str, batch_size: int, shuffle: bool, validation_split: float,
+                 num_workers: int, dataset: str, num_classes: int, training: bool, test_cross_val: int = None,
+                 limit_data: int = None):
 
         assert num_classes == 2
 
@@ -224,9 +225,9 @@ class AgeDataLoader(BaseDataLoader):
 
     """
 
-    def __init__(self, data_dir, batch_size, shuffle, validation_split,
-                 num_workers, dataset, num_classes, training, test_cross_val=None,
-                 limit_data=None):
+    def __init__(self, data_dir: str, batch_size: int, shuffle: bool, validation_split: float,
+                 num_workers: int, dataset: str, num_classes: int, training: bool, test_cross_val: int = None,
+                 limit_data: int = None):
 
         self.dataset = AgeDataset(data_dir=data_dir, dataset=dataset,
                                   test_cross_val=test_cross_val,

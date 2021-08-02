@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 
-def main(url_face, url_age_gender, image_path):
+def main(url_face: str, url_age_gender: str, image_path: str):
 
     logging.debug(f"loading image ...")
     with open(image_path, 'rb') as stream:

@@ -19,7 +19,7 @@ from torch.cuda.amp import autocast # for float16 mixed point precision
 from pprint import pprint
 
 
-def train(config):
+def train(config: ConfigParser):
     logger = config.get_logger('train')
 
     config['data_loader']['args']['training'] = True
@@ -69,7 +69,7 @@ def train(config):
     trainer.train()
 
 
-def train_to_dump(config, checkpoint):
+def train_to_dump(config: ConfigParser, checkpoint: str) -> dict:
     """Save train / val results."""
     logger = config.get_logger('train_to_dump')
 
@@ -139,7 +139,7 @@ def train_to_dump(config, checkpoint):
     return logs
 
 
-def test(config, checkpoint):
+def test(config: ConfigParser, checkpoint: str) -> dict:
     """Save test results"""
     logger = config.get_logger('test')
 
@@ -208,7 +208,7 @@ def test(config, checkpoint):
     return log
 
 
-def main(config_path):
+def main(config_path: str):
     config_dict = read_json(config_path)
     num_cross_val = config_dict['num_cross_val']
     SEEDS = config_dict['seeds']

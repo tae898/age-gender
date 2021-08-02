@@ -19,7 +19,7 @@ torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
 
 
-def main(config):
+def main(config: ConfigParser):
     logger = config.get_logger('train')
 
     config['data_loader']['args']['training'] = True

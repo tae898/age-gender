@@ -158,7 +158,7 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
 
 ### Model
 
-The model is basically an MLP. There are two variants considered. One is a pure MLP and the other is MLP with [IC layers](https://arxiv.org/pdf/1905.05928.pdf). It's emperically shown that the latter is better than the pure MLP.
+The model is basically an MLP. There are two variants considered. One is a plain MLP and the other is MLP with [IC layers](https://arxiv.org/pdf/1905.05928.pdf). It's emperically shown that the latter is better than the plain MLP.
 
 ### Training steps
 

@@ -19,7 +19,8 @@ from PIL import Image
 import os
 
 
-def extract_Adience_arcface(image_type='aligned', docker_port=10002, cuda=False, resize=640):
+def extract_Adience_arcface(image_type: str = 'aligned', docker_port: int = 10002,
+                            cuda: bool = False, resize: int = 640):
 
     if cuda:
         image_name = 'face-detection-recognition-cuda'
@@ -80,7 +81,8 @@ def extract_Adience_arcface(image_type='aligned', docker_port=10002, cuda=False,
     logging.info(f"DONE!")
 
 
-def get_Adience_clean(image_type='aligned', resize=640, det_score=0.90):
+def get_Adience_clean(image_type: str = 'aligned', resize: int = 640, det_score: float = 0.90):
+
     image_paths, folds, header, ages, genders, fold_from, logs = get_Adience_image_paths(
         image_type, resize=resize)
 
@@ -119,8 +121,8 @@ def get_Adience_clean(image_type='aligned', resize=640, det_score=0.90):
     logging.info(f"DONE!")
 
 
-def extract_imdb_wiki_arcface(dataset='imdb', docker_port=10002, cuda=False,
-                              resize=640):
+def extract_imdb_wiki_arcface(dataset: str = 'imdb', docker_port: int = 10002,
+                              cuda: bool = False, resize: int = 640):
 
     if cuda:
         image_name = 'face-detection-recognition-cuda'
@@ -180,7 +182,7 @@ def extract_imdb_wiki_arcface(dataset='imdb', docker_port=10002, cuda=False,
     logging.info(f"DONE!")
 
 
-def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
+def get_imdb_wiki_clean(dataset: str, resize: int = 640, det_score: float = 0.9):
     """Copied from
     https://github.com/yu4u/age-gender-estimation/blob/master/create_db.py
     """
@@ -227,7 +229,7 @@ def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
         fdr = read_pickle(fdr_path)
 
         if fdr is None:
-            metadata['removed']['no_embeddings']+=1
+            metadata['removed']['no_embeddings'] += 1
             continue
 
         if len(fdr) == 0:
@@ -274,6 +276,7 @@ def get_imdb_wiki_clean(dataset, resize=640, det_score=0.9):
 
     data_write_path = str(data_dir / "data.npy")
     np.save(data_write_path, data)
-    logging.info(f"{dataset}\'s data (embeddings) written at : {data_write_path}")
+    logging.info(
+        f"{dataset}\'s data (embeddings) written at : {data_write_path}")
 
     logging.info(f"DONE!")

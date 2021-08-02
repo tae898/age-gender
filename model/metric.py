@@ -1,7 +1,7 @@
 import torch
 
 
-def accuracy(output, target):
+def accuracy(output: torch.tensor, target: torch.tensor):
     """
     Vanilla accuracy: TP + TN / (TP + TN + FP + FN)
     """
@@ -13,7 +13,7 @@ def accuracy(output, target):
     return correct / len(target)
 
 
-def accuracy_mse(output, target):
+def accuracy_mse(output: torch.tensor, target: torch.tensor):
     """
     This function was made when I was tinkering with regression rather than 
     classification. Just ignore it.
@@ -25,7 +25,7 @@ def accuracy_mse(output, target):
     return correct / len(target)
 
 
-def accuracy_relaxed(output, target):
+def accuracy_relaxed(output: torch.tensor, target: torch.tensor):
     """
     I made this function so that 101 age classes correspond to 8 age classes,
     for Adience dataset. Turns out this results in the same value as the vanilla 
@@ -59,7 +59,7 @@ def accuracy_relaxed(output, target):
     return correct / len(target)
 
 
-def top_k_acc(output, target, k=3):
+def top_k_acc(output: torch.tensor, target: torch.tensor, k: int = 3):
     """
     Not a useful metric for gender or age. Just ignore it.
     """
