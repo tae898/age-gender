@@ -1,12 +1,15 @@
 {
-    "last_activation": null,
-    "min_bound": null,
-    "max_bound": null,
     "criterion": "cse",
     "gender_or_age": "age",
-    "only_MLP": true,
+    "add_residual": true,
+    "add_IC": true,
     "dropout": [
-        0
+        0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5
     ],
     "num_residuals_per_block": [
         0,
@@ -40,12 +43,12 @@
     ],
     "data_dir": "/home/tk/repos/age-gender/data",
     "cpus": 8,
-    "dataset": "imdb_wiki_adience",
-    "num_samples": 50,
+    "dataset": "imdb_wiki",
+    "num_samples": 100,
     "max_num_epochs": 10,
     "gpus_per_trial": 1,
     "limit_data": null,
     "amp": true,
-    "num_classes": 101,
+    "num_classes": 8,
     "validation_split": 0.1
 }

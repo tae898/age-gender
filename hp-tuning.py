@@ -33,10 +33,8 @@ def train(config: dict):
                  num_blocks=config['num_blocks'],
                  num_classes=config['num_classes'],
                  num_initial_features=512,
-                 last_activation=config['last_activation'],
-                 min_bound=config['min_bound'],
-                 max_bound=config['max_bound'],
-                 only_MLP=config['only_MLP'])
+                 add_residual=config['add_residual'],
+                 add_IC=config['add_IC'])
 
     device = "cpu"
     if torch.cuda.is_available():

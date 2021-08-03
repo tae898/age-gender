@@ -5,51 +5,6 @@ from base import BaseModel
 import torch
 
 
-class LinearBounded(nn.Module):
-    """
-    This custom activation function was made so that the output is always 
-    bounded within the specified range. In the range, it's just linear.
-
-    In the end I didn't use this since regression results were worse than 
-    classification results.
-    """
-
-    def __init__(self, min_bound: float, max_bound: float):
-        super().__init__()
-
-        assert min_bound < max_bound
-
-        self.min_bound = min_bound
-        self.max_bound = max_bound
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-
-        return torch.clamp(x, min=self.min_bound, max=self.max_bound)
-
-
-class SigmoidBounded(nn.Module):
-    """
-    This custom activation function was made so that I can specify the
-    minimum and maximum of the sigmoid function.
-
-    In the end I didn't use this since regression results were worse than 
-    classification results.
-
-    """
-
-    def __init__(self, min_bound: float, max_bound: float):
-        super().__init__()
-
-        assert min_bound < max_bound
-
-        self.min_bound = min_bound
-        self.max_bound = max_bound
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-
-        return torch.sigmoid(x) * (self.max_bound - self.min_bound) + self.min_bound
-
-
 class Residual(nn.Module):
     """
     This module looks like what you find in the original resnet or IC paper     
@@ -59,48 +14,47 @@ class Residual(nn.Module):
 
     """
 
-    def __init__(self, num_features: int, dropout: float, ic_beginning: bool = False,
-                 only_MLP: bool = False):
+    def __init__(self, num_features: int, dropout: float,
+                 add_residual: bool, add_IC: bool, i: int, j: int):
         super().__init__()
         self.num_features = num_features
-        self.ic_beginning = ic_beginning
-        self.only_MLP = only_MLP
+        self.add_residual = add_residual
+        self.add_IC = add_IC
+        self.i = i
+        self.j = j
 
-        if self.ic_beginning and (not self.only_MLP):
+        if not ((self.i == 0) and (self.j == 0) and (not self.add_residual)):
+            self.relu1 = nn.ReLU()
+        if self.add_IC:
             self.norm_layer1 = nn.BatchNorm1d(num_features)
             self.dropout1 = nn.Dropout(p=dropout)
-
         self.linear1 = nn.Linear(num_features, num_features)
-        self.relu1 = nn.ReLU()
 
-        if not self.only_MLP:
+        self.relu2 = nn.ReLU()
+        if self.add_IC:
             self.norm_layer2 = nn.BatchNorm1d(num_features)
             self.dropout2 = nn.Dropout(p=dropout)
-
         self.linear2 = nn.Linear(num_features, num_features)
-        self.relu2 = nn.ReLU()
 
     def forward(self, x: torch.tensor) -> torch.tensor:
 
         identity = out = x
 
-        if self.ic_beginning and (not self.only_MLP):
-            out = self.norm_layer1(x)
+        if not ((self.i == 0) and (self.j == 0) and (not self.add_residual)):
+            out = self.relu1(out)
+        if self.add_IC:
+            out = self.norm_layer1(out)
             out = self.dropout1(out)
-
         out = self.linear1(out)
-        out = self.relu1(out)
-
-        if not self.only_MLP:
-            out = self.norm_layer2(out)
-            out = self.dropout2(out)
-
-        out = self.linear2(out)
-
-        if not self.only_MLP:
-            out += identity
 
         out = self.relu2(out)
+        if self.add_IC:
+            out = self.norm_layer2(out)
+            out = self.dropout2(out)
+        out = self.linear2(out)
+
+        if self.add_residual:
+            out += identity
 
         return out
 
@@ -114,30 +68,28 @@ class DownSample(nn.Module):
     """
 
     def __init__(self, in_features: int, out_features: int, dropout: float,
-                 only_MLP: bool = False):
+                 add_IC: bool):
         super().__init__()
         assert in_features > out_features
 
         self.in_features = in_features
         self.out_features = out_features
-        self.only_MLP = only_MLP
+        self.add_IC = add_IC
 
-        if not self.only_MLP:
+        self.relu = nn.ReLU()
+        if self.add_IC:
             self.norm_layer = nn.BatchNorm1d(in_features)
             self.dropout = nn.Dropout(p=dropout)
-
         self.linear = nn.Linear(in_features, out_features)
-        self.relu = nn.ReLU()
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         out = x
 
-        if not self.only_MLP:
+        out = self.relu(out)
+        if self.add_IC:
             out = self.norm_layer(out)
             out = self.dropout(out)
-
         out = self.linear(out)
-        out = self.relu(out)
 
         return out
 
@@ -153,42 +105,31 @@ class ResMLP(BaseModel):
     """
 
     def __init__(self, dropout: float, num_residuals_per_block: int, num_blocks: int, num_classes: int,
-                 num_initial_features: int, last_activation: int = None, min_bound: float = None,
-                 max_bound: float = None, only_MLP: bool = False):
+                 num_initial_features: int, add_residual: bool = True, add_IC: bool = True):
         super().__init__()
 
         blocks = []
-        blocks.extend(self._create_block(
-            num_initial_features, dropout, num_residuals_per_block, False, only_MLP=only_MLP))
-        num_initial_features //= 2
 
-        for _ in range(num_blocks-1):
+        for i in range(num_blocks):
             blocks.extend(self._create_block(
-                num_initial_features, dropout, num_residuals_per_block, True, only_MLP=only_MLP))
+                num_initial_features, dropout, num_residuals_per_block, add_residual, add_IC, i))
             num_initial_features //= 2
 
-        blocks.append(nn.Linear(num_initial_features, num_classes))
-
-        if last_activation == 'LinearBounded':
-            blocks.append(LinearBounded(
-                min_bound=min_bound, max_bound=max_bound))
-        elif last_activation == 'SigmoidBounded':
-            blocks.append(SigmoidBounded(
-                min_bound=min_bound, max_bound=max_bound))
+        # last classiciation layer
+        blocks.append(DownSample(num_initial_features,
+                                 num_classes, dropout, add_IC))
 
         self.blocks = nn.Sequential(*blocks)
 
     def _create_block(self, in_features: int, dropout: float,
-                      num_residuals_per_block: int, ic_beginning: bool, only_MLP: bool) -> list:
+                      num_residuals_per_block: int, add_residual: bool,
+                      add_IC: bool, i: int) -> list:
         block = []
-        if num_residuals_per_block > 0:
+        for j in range(num_residuals_per_block):
             block.append(Residual(in_features, dropout,
-                                  ic_beginning, only_MLP=only_MLP))
-        for _ in range(num_residuals_per_block-1):
-            block.append(Residual(in_features, dropout,
-                                  True, only_MLP=only_MLP))
+                                  add_residual, add_IC, i, j))
         block.append(DownSample(
-            in_features, in_features//2, dropout, only_MLP=only_MLP))
+            in_features, in_features//2, dropout, add_IC))
 
         return block
 

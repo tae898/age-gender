@@ -244,10 +244,10 @@ def main(config_path: str):
 
     for split in ['train', 'val', 'test']:
         for metric in ['loss'] + config['metrics']:
-            to_dump['stats'][f'{split}_{metric}_mean'] = np.mean(
+            to_dump['stats'][f'{split}_{metric}_mean'] = np.nanmean(
                 [to_dump['stats'][SEED][split][i][metric] for SEED in SEEDS for i in range(num_cross_val)])
 
-            to_dump['stats'][f'{split}_{metric}_std'] = np.std(
+            to_dump['stats'][f'{split}_{metric}_std'] = np.nanstd(
                 [to_dump['stats'][SEED][split][i][metric] for SEED in SEEDS for i in range(num_cross_val)])
                 
     filepath = os.path.join(config_dict['trainer']['save_dir'],

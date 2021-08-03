@@ -10,38 +10,36 @@
     "name": "ResMLP",
     "n_gpu": 1,
     "amp": true,
-    "checkpoint": null,
+    "checkpoint": "training-results/gender-add-residual-false-add-ic-true/training/imdb-wiki/models/ResMLP/0803_213926/model_best.pth",
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": null,
-            "num_residuals_per_block": 1,
-            "num_blocks": 2,
-            "num_classes": 101,
+            "dropout": 0.1,
+            "num_residuals_per_block": 2,
+            "num_blocks": 4,
+            "num_classes": 2,
             "num_initial_features": 512,
-            "last_activation": null,
-            "min_bound": null,
-            "max_bound": null,
-            "only_MLP": true
+            "add_residual": false,
+            "add_IC": true
         }
     },
     "data_loader": {
-        "type": "AgeDataLoader",
+        "type": "GenderDataLoader",
         "args": {
             "data_dir": "data/",
             "batch_size": 256,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
-            "dataset": "Adience",
-            "num_classes": 101
+            "dataset": "adience",
+            "num_classes": 2
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.0035753161317240803,
-            "weight_decay": 3.584710633004188e-06
+            "lr": 0.03943508299495083,
+            "weight_decay": 2.5926393015905714e-06
         }
     },
     "loss": "cse",
@@ -51,11 +49,11 @@
     "lr_scheduler": {
         "type": "ExponentialLR",
         "args": {
-            "gamma": 0.0004325327646962347
+            "gamma": 0.18195706189458422
         }
     },
     "trainer": {
-        "epochs": 1,
+        "epochs": 30,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,

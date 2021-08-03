@@ -1,475 +1,623 @@
-# Evaluation results (MLP with IC)
+# Training results
 
-Validation split is always 10%
+## Gender, 2 classes
 
-## Gender (2 classes, cross entropy loss)
+### `hp-tuning.py` with `hp-tuning.json` (below)
+```
+{
+    "criterion": "cse",
+    "gender_or_age": "gender",
+    "add_residual": true,
+    "add_IC": true,
+    "dropout": [
+        0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5
+    ],
+    "num_residuals_per_block": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "num_blocks": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "batch_size": [
+        256,
+        512
+    ],
+    "lr": [
+        1e-6,
+        1e-1
+    ],
+    "weight_decay": [
+        1e-6,
+        1e-1
+    ],
+    "gamma": [
+        1e-6,
+        1
+    ],
+    "data_dir": "/home/tk/repos/age-gender/data",
+    "cpus": 8,
+    "dataset": "imdb_wiki",
+    "num_samples": 100,
+    "max_num_epochs": 10,
+    "gpus_per_trial": 1,
+    "limit_data": null,
+    "amp": true,
+    "num_classes": 2,
+    "validation_split": 0.1
+}
+```
+```
+2021-08-03 12:22:12,370 INFO tune.py:549 -- Total run time: 5064.50 seconds (5063.90 seconds for the tuning loop).
+Best trial config: OrderedDict([('criterion', 'cse'), ('gender_or_age', 'gender'), ('add_residual', True), ('add_IC', True), ('dropout', 0.1), ('num_residuals_per_block', 2), ('num_blocks', 4), ('batch_size', 256), ('lr', 0.03943508299495083), ('weight_decay', 2.5926393015905714e-06), ('gamma', 0.18195706189458422), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 2), ('validation_split', 0.1)])
+Best trial final validation loss: 0.4510381668806076
+Best trial final validation accuracy: 0.8213935969868174
+```
+* time elapsed: 1 hour 22 minutes
 
-### Train on IMDB and WIKI
+### `training.py` with `"add_residual": true, "add_IC": true`
 
-2021-07-21 11:16:39,825 INFO tune.py:549 -- Total run time: 5317.88 seconds (5317.23 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'gender'), ('only_MLP', False), ('dropout', 0.5), ('num_residuals_per_block', 3), ('num_blocks', 1), ('batch_size', 512), ('lr', 0.010979988817809663), ('weight_decay', 0.001468989807764881), ('gamma', 0.16934155410667961), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 2), ('validation_split', 0.1)])
-Best trial final validation loss: 0.44577305018901825
-Best trial final validation accuracy: 0.8241807909604519
+#### imdb_wiki
+```
+2021-08-03 16:12:53,643 - trainer - INFO -     epoch          : 10              
+2021-08-03 16:12:53,643 - trainer - INFO -     loss           : 0.43562397133189384
+2021-08-03 16:12:53,643 - trainer - INFO -     accuracy       : 0.8269820578021194
+2021-08-03 16:12:53,643 - trainer - INFO -     val_loss       : 0.4500062224956659
+2021-08-03 16:12:53,643 - trainer - INFO -     val_accuracy   : 0.8211075652077807
+2021-08-03 16:12:53,677 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_160516/checkpoint-epoch10.pth ...
+2021-08-03 16:12:53,714 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 11 mins
+
+#### imdb_wiki_adience
 
 ```
-2021-07-21 11:31:20,345 - trainer - INFO -     epoch          : 10
-2021-07-21 11:31:20,345 - trainer - INFO -     loss           : 0.4415791288081998
-2021-07-21 11:31:20,346 - trainer - INFO -     accuracy       : 0.8253154405108087
-2021-07-21 11:31:20,346 - trainer - INFO -     val_loss       : 0.44690019006912524
-2021-07-21 11:31:20,346 - trainer - INFO -     val_accuracy   : 0.8229877279957157
-2021-07-21 11:31:20,384 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0721_112606/checkpoint-epoch10.pth ...
-2021-07-21 11:31:20,422 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 16:24:36,347 - trainer - INFO -     epoch          : 8               
+2021-08-03 16:24:36,347 - trainer - INFO -     loss           : 0.4273104392078786
+2021-08-03 16:24:36,348 - trainer - INFO -     accuracy       : 0.8324831023271732
+2021-08-03 16:24:36,348 - trainer - INFO -     val_loss       : 0.43388564253877276
+2021-08-03 16:24:36,348 - trainer - INFO -     val_accuracy   : 0.8313428839644594
+2021-08-03 16:24:36,387 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_161822/checkpoint-epoch8.pth ...
+2021-08-03 16:24:36,426 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 10 mins
 
-### Train on IMDB, WIKI, and Adience
-
-2021-07-21 11:18:37,148 INFO tune.py:549 -- Total run time: 5415.20 seconds (5414.64 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'gender'), ('only_MLP', False), ('dropout', 0.5), ('num_residuals_per_block', 3), ('num_blocks', 1), ('batch_size', 512), ('lr', 0.010979988817809663), ('weight_decay', 0.001468989807764881), ('gamma', 0.16934155410667961), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 2), ('validation_split', 0.1)])
-Best trial final validation loss: 0.43183608643892335
-Best trial final validation accuracy: 0.8323862268239827
+#### cross-val on adience, from random initialization
 
 ```
-2021-07-21 11:31:08,903 - trainer - INFO -     epoch          : 9
-2021-07-21 11:31:08,903 - trainer - INFO -     loss           : 0.4347131204181102
-2021-07-21 11:31:08,904 - trainer - INFO -     accuracy       : 0.8298884233926128
-2021-07-21 11:31:08,904 - trainer - INFO -     val_loss       : 0.43157466155726737
-2021-07-21 11:31:08,904 - trainer - INFO -     val_accuracy   : 0.8325798990748529
-2021-07-21 11:31:08,942 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0721_112613/checkpoint-epoch9.pth ...
-2021-07-21 11:31:09,000 - trainer - INFO - Saving current best: model_best.pth ...
+"train_loss_mean": 0.07014234351000409,                                 
+"train_loss_std": 0.007419605746854006,                                 
+"train_accuracy_mean": 0.9785880285591491,                              
+"train_accuracy_std": 0.00268523516573176,                              
+"val_loss_mean": 0.13736265950715068,                                   
+"val_loss_std": 0.019768350925692325,                                   
+"val_accuracy_mean": 0.9542454167610753,                                
+"val_accuracy_std": 0.005536124699840537,                               
+"test_loss_mean": 0.4753054151811527,                                   
+"test_loss_std": 0.10246762597068003,                                   
+"test_accuracy_mean": 0.8168209149712148,                               
+"test_accuracy_std": 0.03200967909062663
 ```
+* time elapsed: 15 mins
 
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0721_114435_cross-val-results.json
-```
-"train_loss_mean": 0.10148818105643322,
-"train_loss_std": 0.008759538974549577,
-"train_accuracy_mean": 0.9649996459765515,
-"train_accuracy_std": 0.00356599374993471,
-"val_loss_mean": 0.14238248450113583,
-"val_loss_std": 0.02108279431430651,
-"val_accuracy_mean": 0.9533133750599464,
-"val_accuracy_std": 0.0058745037190235235,
-"test_loss_mean": 0.41745343956221725,
-"test_loss_std": 0.08806107479811218,
-"test_accuracy_mean": 0.8338550235483859,
-"test_accuracy_std": 0.03694679438854957
-```
-
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
-
-saved/0721_115511_cross-val-results.json
+#### cross-val on adience, pretrained on imdb_wiki
 
 ```
-"train_loss_mean": 0.038070759118852555,
-"train_loss_std": 0.0023812576659911246,
-"train_accuracy_mean": 0.9896795583043975,
-"train_accuracy_std": 0.0009383599680312533,
-"val_loss_mean": 0.0884952815023191,
-"val_loss_std": 0.018836561490730732,
-"val_accuracy_mean": 0.9752344649335718,
-"val_accuracy_std": 0.005009718519486596,
-"test_loss_mean": 0.31723329968745473,
-"test_loss_std": 0.09017346012735108,
-"test_accuracy_mean": 0.8885251938016441,
-"test_accuracy_std": 0.029840646977007373
+"train_loss_mean": 0.05116955817088978,                                 
+"train_loss_std": 0.027093508683019133,                                 
+"train_accuracy_mean": 0.992713610982031,                               
+"train_accuracy_std": 0.007301648812779891,                             
+"val_loss_mean": 0.1018548136591801,                                    
+"val_loss_std": 0.03267981903184156,                                    
+"val_accuracy_mean": 0.9733501212112605,                                
+"val_accuracy_std": 0.010233636484555785,                               
+"test_loss_mean": 0.3645594851484624,                                   
+"test_loss_std": 0.08713938851396215,                                   
+"test_accuracy_mean": 0.8742039684103835,                               
+"test_accuracy_std": 0.030556116361374747 
 ```
+* time elapsed: 13 mins
 
-## Age (8 classes, cross entropy loss)
+### `training.py` with `"add_residual": true, "add_IC": false`
 
-### Train on IMDB and WIKI
-
-2021-07-21 14:06:39,596 INFO tune.py:549 -- Total run time: 7756.80 seconds (7756.58 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', False), ('dropout', 0.2), ('num_residuals_per_block', 4), ('num_blocks', 0), ('batch_size', 512), ('lr', 0.011587715829876227), ('weight_decay', 0.054480726081375434), ('gamma', 0.8241502276709554), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 8), ('validation_split', 0.1)])
-Best trial final validation loss: 1.0482525458702674
-Best trial final validation accuracy: 0.6082360326428123
-
-```
-2021-07-21 15:02:12,334 - trainer - INFO -     epoch          : 10
-2021-07-21 15:02:12,334 - trainer - INFO -     loss           : 0.9352032564335985
-2021-07-21 15:02:12,334 - trainer - INFO -     accuracy       : 0.6545405601887413
-2021-07-21 15:02:12,334 - trainer - INFO -     val_loss       : 1.0433464042651348
-2021-07-21 15:02:12,334 - trainer - INFO -     val_accuracy   : 0.6113181963960291
-2021-07-21 15:02:12,369 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0721_145736/checkpoint-epoch10.pth ...
-2021-07-21 15:02:12,406 - trainer - INFO - Saving current best: model_best.pth ...
-```
-
-### Train on IMDB, WIKI, and Adience
-
-2021-07-21 14:11:30,885 INFO tune.py:549 -- Total run time: 8034.66 seconds (8034.45 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', False), ('dropout', 0.2), ('num_residuals_per_block', 4), ('num_blocks', 0), ('batch_size', 512), ('lr', 0.011587715829876227), ('weight_decay', 0.054480726081375434), ('gamma', 0.8241502276709554), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 8), ('validation_split', 0.1)])
-Best trial final validation loss: 1.0232807252465226
-Best trial final validation accuracy: 0.615121598844209
-
-```
-2021-07-21 15:02:38,319 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0721_145747/checkpoint-epoch10.pth ...
-2021-07-21 15:03:07,395 - trainer - INFO -     epoch          : 11
-2021-07-21 15:03:07,395 - trainer - INFO -     loss           : 0.8974189443562165
-2021-07-21 15:03:07,395 - trainer - INFO -     accuracy       : 0.66867144750342
-2021-07-21 15:03:07,395 - trainer - INFO -     val_loss       : 1.0200129478442959
-2021-07-21 15:03:07,395 - trainer - INFO -     val_accuracy   : 0.6172819530592936
-2021-07-21 15:03:07,437 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0721_145747/checkpoint-epoch11.pth ...
-2021-07-21 15:03:07,495 - trainer - INFO - Saving current best: model_best.pth .
-```
-
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0721_152057_cross-val-results.json
-
-```
-"train_loss_mean": 0.04190095121983994,
-"train_loss_std": 0.032262749448723003,
-"train_accuracy_mean": 0.988930769772272,
-"train_accuracy_std": 0.009345581732264688,
-"val_loss_mean": 0.31300895695269637,
-"val_loss_std": 0.059488147284363725,
-"val_accuracy_mean": 0.9224977238570715,
-"val_accuracy_std": 0.01181242786189685,
-"test_loss_mean": 1.8838238582339832,
-"test_loss_std": 0.3044851064838116,
-"test_accuracy_mean": 0.5510827476376152,
-"test_accuracy_std": 0.03818265664112785
-```  
+* ('lr', 0.0003943508299495083)
   
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
-
-saved/0721_153547_cross-val-results.json
+#### imdb_wiki
 
 ```
-"train_loss_mean": 0.04339913196417851,
-"train_loss_std": 0.030123008445561608,
-"train_accuracy_mean": 0.9891745066247694,
-"train_accuracy_std": 0.008108085307960462,
-"val_loss_mean": 0.2532132251602203,
-"val_loss_std": 0.03768542762220299,
-"val_accuracy_mean": 0.927418347899599,
-"val_accuracy_std": 0.012263066647882265,
-"test_loss_mean": 1.5619400548899158,
-"test_loss_std": 0.20294750497817765,
-"test_accuracy_mean": 0.591538459839801,
-"test_accuracy_std": 0.02674479992826164
+2021-08-03 20:14:27,519 - trainer - INFO -     epoch          : 6               
+2021-08-03 20:14:27,520 - trainer - INFO -     loss           : 0.4296978085403524
+2021-08-03 20:14:27,520 - trainer - INFO -     accuracy       : 0.8314330766485478
+2021-08-03 20:14:27,520 - trainer - INFO -     val_loss       : 0.4511282864289406
+2021-08-03 20:14:27,520 - trainer - INFO -     val_accuracy   : 0.8199615937223695
+2021-08-03 20:14:27,545 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_201052/checkpoint-epoch6.pth ...
+2021-08-03 20:14:27,573 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 6 mins
 
-## Age (101 classes, cross entropy loss)
-
-### Train on IMDB and WIKI
-
-2021-07-21 17:30:05,991 INFO tune.py:549 -- Total run time: 7617.83 seconds (7617.58 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', False), ('dropout', 0.2), ('num_residuals_per_block', 4), ('num_blocks', 0), ('batch_size', 512), ('lr', 0.011587715829876227), ('weight_decay', 0.054480726081375434), ('gamma', 0.8241502276709554), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 101), ('validation_split', 0.1)])
-Best trial final validation loss: 3.270758928396763
-Best trial final validation accuracy: 0.14721908349026994
-
+#### imdb_wiki_adience
 
 ```
-2021-07-22 13:25:26,630 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_102338/checkpoint-epoch15.pth ...
-2021-07-22 13:37:14,939 - trainer - INFO -     epoch          : 16
-2021-07-22 13:37:14,939 - trainer - INFO -     loss           : 2.9365658889313395
-2021-07-22 13:37:14,939 - trainer - INFO -     accuracy       : 0.217368259972018
-2021-07-22 13:37:14,939 - trainer - INFO -     accuracy_relaxed: 0.644874166712389
-2021-07-22 13:37:14,939 - trainer - INFO -     val_loss       : 3.2329624127119017
-2021-07-22 13:37:14,939 - trainer - INFO -     val_accuracy   : 0.17277894006969755
-2021-07-22 13:37:14,939 - trainer - INFO -     val_accuracy_relaxed: 0.6010960429455208
-2021-07-22 13:37:14,979 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_102338/checkpoint-epoch16.pth ...
-2021-07-22 13:37:15,026 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 20:22:36,012 - trainer - INFO -     epoch          : 5               
+2021-08-03 20:22:36,012 - trainer - INFO -     loss           : 0.4202028327735624
+2021-08-03 20:22:36,012 - trainer - INFO -     accuracy       : 0.8369428045859001
+2021-08-03 20:22:36,012 - trainer - INFO -     val_loss       : 0.4355802848660873
+2021-08-03 20:22:36,012 - trainer - INFO -     val_accuracy   : 0.8304578419187646
+2021-08-03 20:22:36,038 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_201930/checkpoint-epoch5.pth ...
+2021-08-03 20:22:36,066 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 6 mins
 
-### Train on IMDB, WIKI, and Adience
-
-2021-07-21 17:27:40,209 INFO tune.py:549 -- Total run time: 7450.03 seconds (7449.75 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', False), ('dropout', 0.2), ('num_residuals_per_block', 4), ('num_blocks', 0), ('batch_size', 512), ('lr', 0.011587715829876227), ('weight_decay', 0.054480726081375434), ('gamma', 0.8241502276709554), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 101), ('validation_split', 0.1)])
-Best trial final validation loss: 3.1681374805729563
-Best trial final validation accuracy: 0.17755839152419936
-
+#### cross-val on adience, from random initialization
 
 ```
-2021-07-22 15:05:14,299 - trainer - INFO -     epoch          : 22
-2021-07-22 15:05:14,300 - trainer - INFO -     loss           : 2.7670100048367856
-2021-07-22 15:05:14,300 - trainer - INFO -     accuracy       : 0.2636291253419973
-2021-07-22 15:05:14,300 - trainer - INFO -     accuracy_relaxed: 0.6608936816005472
-2021-07-22 15:05:14,300 - trainer - INFO -     val_loss       : 3.12917639278784
-2021-07-22 15:05:14,300 - trainer - INFO -     val_accuracy   : 0.20624277228763666
-2021-07-22 15:05:14,300 - trainer - INFO -     val_accuracy_relaxed: 0.6122513009882254
-2021-07-22 15:05:14,348 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_102321/checkpoint-epoch22.pth ...
-2021-07-22 15:05:14,403 - trainer - INFO - Saving current best: model_best.pth ...
+"train_loss_mean": 0.2427718426573297,                                  
+"train_loss_std": 0.05739613804765838,                                  
+"train_accuracy_mean": 0.9150258346057791,                              
+"train_accuracy_std": 0.008623799047669793,                             
+"val_loss_mean": 0.2569146760947735,                                    
+"val_loss_std": 0.05539370526844229,                                    
+"val_accuracy_mean": 0.9102971799542968,                                
+"val_accuracy_std": 0.009436896248468095,                               
+"test_loss_mean": 0.4620544001578747,                                   
+"test_loss_std": 0.09472440369651962,                                   
+"test_accuracy_mean": 0.8100161602910977,                               
+"test_accuracy_std": 0.038296994731876824 
 ```
+* time elapsed: 15 mins
 
-
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0722_164942_cross-val-results.json
-
-```
-"train_loss_mean": 0.038432069756377835,
-"train_loss_std": 0.027884319821581103,
-"train_accuracy_mean": 0.9899485142903532,
-"train_accuracy_std": 0.007735580455725201,
-"train_accuracy_relaxed_mean": 0.9899485142903532,
-"train_accuracy_relaxed_std": 0.007735580455725201,
-"val_loss_mean": 0.3050184017853968,
-"val_loss_std": 0.0497976109543561,
-"val_accuracy_mean": 0.9234693524167783,
-"val_accuracy_std": 0.012465248668803556,
-"val_accuracy_relaxed_mean": 0.9234693524167783,
-"val_accuracy_relaxed_std": 0.012465248668803556,
-"test_loss_mean": 1.9645439335921062,
-"test_loss_std": 0.31958286856620943,
-"test_accuracy_mean": 0.5409089567134056,
-"test_accuracy_std": 0.03856700464423375,
-"test_accuracy_relaxed_mean": 0.5409089567134056,
-"test_accuracy_relaxed_std": 0.03856700464423375
-```
-
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
-
-saved/0722_171635_cross-val-results.json
+#### cross-val on adience, pretrained on imdb_wiki
 
 ```
-"train_loss_mean": 0.04338961815139873,
-"train_loss_std": 0.03018370021068777,
-"train_accuracy_mean": 0.988935596807582,
-"train_accuracy_std": 0.007997939199271012,
-"train_accuracy_relaxed_mean": 0.988935596807582,
-"train_accuracy_relaxed_std": 0.007997939199271012,
-"val_loss_mean": 0.24978204337834944,
-"val_loss_std": 0.031318021988937884,
-"val_accuracy_mean": 0.9283721701306149,
-"val_accuracy_std": 0.010990985978302299,
-"val_accuracy_relaxed_mean": 0.9283721701306149,
-"val_accuracy_relaxed_std": 0.010990985978302299,
-"test_loss_mean": 1.5450158784519987,
-"test_loss_std": 0.2202436955315273,
-"test_accuracy_mean": 0.5884687953460334,
-"test_accuracy_std": 0.02461252593349489,
-"test_accuracy_relaxed_mean": 0.5884687953460334,
-"test_accuracy_relaxed_std": 0.02461252593349489
+"train_loss_mean": 0.06452259697621805,                                 
+"train_loss_std": 0.005104663719793042,                                 
+"train_accuracy_mean": 0.9826768799552934,                              
+"train_accuracy_std": 0.0019551576166415073,                            
+"val_loss_mean": 0.12104016323904697,                                   
+"val_loss_std": 0.017929299356215567,                                   
+"val_accuracy_mean": 0.9656003295661434,                                
+"val_accuracy_std": 0.006911336096919621,                               
+"test_loss_mean": 0.2997497136718888,                                   
+"test_loss_std": 0.04935490312943048,                                   
+"test_accuracy_mean": 0.8945160037944951,                               
+"test_accuracy_std": 0.01877370748328877
 ```
+* time elapsed: 12 mins
 
+### `training.py` with `"add_residual": false, "add_IC": true`
 
-# Evaluation results (plain MLP)
-
-Validation split is always 10%
-
-## Gender (2 classes, cross entropy loss)
-
-### Train on IMDB and WIKI
-
-2021-07-22 21:02:23,368 INFO tune.py:549 -- Total run time: 2597.27 seconds (2597.08 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'gender'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 1), ('num_blocks', 4), ('batch_size', 512), ('lr', 0.001468989807764881), ('weight_decay', 0.02276685024868625), ('gamma', 0.06637926838138382), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 2), ('validation_split', 0.1)])
-Best trial final validation loss: 0.4447786082059909
-Best trial final validation accuracy: 0.8229001883239171
+#### imdb_wiki
 
 ```
-2021-07-22 21:51:08,481 - trainer - INFO -     epoch          : 14
-2021-07-22 21:51:08,481 - trainer - INFO -     loss           : 0.4391215724628764
-2021-07-22 21:51:08,482 - trainer - INFO -     accuracy       : 0.8302272937698891
-2021-07-22 21:51:08,482 - trainer - INFO -     accuracy_relaxed: 1.0
-2021-07-22 21:51:08,482 - trainer - INFO -     val_loss       : 0.4545662712592345
-2021-07-22 21:51:08,482 - trainer - INFO -     val_accuracy   : 0.8224853656124114
-2021-07-22 21:51:08,482 - trainer - INFO -     val_accuracy_relaxed: 1.0
-2021-07-22 21:51:08,497 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_211202/checkpoint-epoch14.pth ...
-2021-07-22 21:51:08,516 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 21:46:54,969 - trainer - INFO -     epoch          : 10              
+2021-08-03 21:46:54,969 - trainer - INFO -     loss           : 0.4508944748981266
+2021-08-03 21:46:54,969 - trainer - INFO -     accuracy       : 0.8221083069098996
+2021-08-03 21:46:54,969 - trainer - INFO -     val_loss       : 0.45038493837301546
+2021-08-03 21:46:54,969 - trainer - INFO -     val_accuracy   : 0.8216776152188329
+2021-08-03 21:46:55,003 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_213926/checkpoint-epoch10.pth ...
+2021-08-03 21:46:55,039 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-### Train on IMDB, WIKI, and Adience
+* time elapsed: 11 mins
 
-2021-07-22 21:08:33,110 INFO tune.py:549 -- Total run time: 2948.80 seconds (2948.23 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'gender'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 2), ('num_blocks', 2), ('batch_size', 256), ('lr', 0.0010710256549997944), ('weight_decay', 0.04280597490713533), ('gamma', 0.008062359381277659), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 2), ('validation_split', 0.1)])
-Best trial final validation loss: 0.430916253225935
-Best trial final validation accuracy: 0.8319768841801107
+#### imdb_wiki_adience
 
 ```
-2021-07-22 21:49:58,929 - trainer - INFO -     epoch          : 11
-2021-07-22 21:49:58,930 - trainer - INFO -     loss           : 0.4194352995402841
-2021-07-22 21:49:58,930 - trainer - INFO -     accuracy       : 0.8347049324093087
-2021-07-22 21:49:58,930 - trainer - INFO -     accuracy_relaxed: 1.0
-2021-07-22 21:49:58,930 - trainer - INFO -     val_loss       : 0.42992067410170665
-2021-07-22 21:49:58,930 - trainer - INFO -     val_accuracy   : 0.8324708787285806
-2021-07-22 21:49:58,930 - trainer - INFO -     val_accuracy_relaxed: 1.0
-2021-07-22 21:49:58,949 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_211330/checkpoint-epoch11.pth ...
-2021-07-22 21:49:58,974 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 22:01:08,327 - trainer - INFO -     epoch          : 11              
+2021-08-03 22:01:08,328 - trainer - INFO -     loss           : 0.43982255434353495
+2021-08-03 22:01:08,328 - trainer - INFO -     accuracy       : 0.8283469156399726
+2021-08-03 22:01:08,328 - trainer - INFO -     val_loss       : 0.4354807381615317
+2021-08-03 22:01:08,328 - trainer - INFO -     val_accuracy   : 0.831406514438333
+2021-08-03 22:01:08,362 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_215217/checkpoint-epoch11.pth ...
+2021-08-03 22:01:08,404 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 12 mins
 
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0722_222743_cross-val-results.json
-```
-"train_loss_mean": 0.5825609715251807,
-"train_loss_std": 0.11320552604289096,
-"train_accuracy_mean": 0.5921929309266978,
-"train_accuracy_std": 0.13388802517303114,
-"val_loss_mean": 0.5829746401828896,
-"val_loss_std": 0.11280249339977262,
-"val_accuracy_mean": 0.5941951483370282,
-"val_accuracy_std": 0.13307684414193133,
-"test_loss_mean": 0.6253205517655913,
-"test_loss_std": 0.07896039238073754,
-"test_accuracy_mean": 0.578727050339925,
-"test_accuracy_std": 0.1041487423967318
-```
-
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
-
-saved/0722_221435_cross-val-results.json
-```
-"train_loss_mean": 0.07475495609180566,
-"train_loss_std": 0.0034093249003471515,
-"train_accuracy_mean": 0.9812534086692195,
-"train_accuracy_std": 0.001073477600994517,
-"val_loss_mean": 0.11475725782585611,
-"val_loss_std": 0.016295059004781863,
-"val_accuracy_mean": 0.9662740099565249,
-"val_accuracy_std": 0.005094744287542971,
-"test_loss_mean": 0.2992695421451408,
-"test_loss_std": 0.060793215291536876,
-"test_accuracy_mean": 0.8921529804166417,
-"test_accuracy_std": 0.019196948503006118
-```
-
-## Age (8 classes, cross entropy loss)
-
-### Train on IMDB and WIKI
-
-2021-07-22 23:06:12,847 INFO tune.py:549 -- Total run time: 2868.76 seconds (2868.57 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 1), ('num_blocks', 2), ('batch_size', 256), ('lr', 0.0035753161317240803), ('weight_decay', 3.584710633004188e-06), ('gamma', 0.0004325327646962347), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 8), ('validation_split', 0.1)])
-Best trial final validation loss: 1.1113964388003716
-Best trial final validation accuracy: 0.5717765222849969
+#### cross-val on adience, from random initialization
 
 ```
-2021-07-22 23:09:35,036 - trainer - INFO -     epoch          : 4
-2021-07-22 23:09:35,036 - trainer - INFO -     loss           : 1.0589350107990785
-2021-07-22 23:09:35,036 - trainer - INFO -     accuracy       : 0.6023642110031296
-2021-07-22 23:09:35,036 - trainer - INFO -     val_loss       : 1.1045904438465068
-2021-07-22 23:09:35,036 - trainer - INFO -     val_accuracy   : 0.5755550259725906
-2021-07-22 23:09:35,051 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_230719/checkpoint-epoch4.pth ...
-2021-07-22 23:09:35,065 - trainer - INFO - Saving current best: model_best.pth ...
+"train_loss_mean": 0.1872913010730302,                                  
+"train_loss_std": 0.02806141880510625,                                  
+"train_accuracy_mean": 0.9306303536671053,                              
+"train_accuracy_std": 0.01244263662557745,                              
+"val_loss_mean": 0.21449545105333423,                                   
+"val_loss_std": 0.03229871949268204,                                    
+"val_accuracy_mean": 0.9199822739355062,                                
+"val_accuracy_std": 0.014667411625760962,                               
+"test_loss_mean": 0.4761799967033295,                                   
+"test_loss_std": 0.08907125424105215,                                   
+"test_accuracy_mean": 0.7889961510473352,                               
+"test_accuracy_std": 0.04261486888906439
 ```
+* time elapsed: 16 mins
 
-### Train on IMDB, WIKI, and Adience
-
-2021-07-22 23:02:41,543 INFO tune.py:549 -- Total run time: 2641.99 seconds (2641.80 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 1), ('num_blocks', 2), ('batch_size', 256), ('lr', 0.0035753161317240803), ('weight_decay', 3.584710633004188e-06), ('gamma', 0.0004325327646962347), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 8), ('validation_split', 0.1)])
-Best trial final validation loss: 1.099634029382577
-Best trial final validation accuracy: 0.576113652781122
-
-```
-2021-07-22 23:08:05,917 - trainer - INFO -     epoch          : 4
-2021-07-22 23:08:05,917 - trainer - INFO -     loss           : 1.0491730616077994
-2021-07-22 23:08:05,917 - trainer - INFO -     accuracy       : 0.6049741187542779
-2021-07-22 23:08:05,917 - trainer - INFO -     val_loss       : 1.1036202154276562
-2021-07-22 23:08:05,917 - trainer - INFO -     val_accuracy   : 0.5747914242648614
-2021-07-22 23:08:05,929 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0722_230556/checkpoint-epoch4.pth ...
-2021-07-22 23:08:05,943 - trainer - INFO - Saving current best: model_best.pth ...
-```
-
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0722_231921_cross-val-results.json
+#### cross-val on adience, pretrained on imdb_wiki
 
 ```
-"train_loss_mean": 1.1818777134307918,
-"train_loss_std": 0.040738286630021485,
-"train_accuracy_mean": 0.42667301288076714,
-"train_accuracy_std": 0.019601423041593215,
-"val_loss_mean": 1.212809873234306,
-"val_loss_std": 0.029987833890638606,
-"val_accuracy_mean": 0.4232847308144483,
-"val_accuracy_std": 0.015104964140723194,
-"test_loss_mean": 1.4653894133352239,
-"test_loss_std": 0.1532473417629615,
-"test_accuracy_mean": 0.3916536457639523,
-"test_accuracy_std": 0.08538745754507433
+"train_loss_mean": 0.08476811661805007,                                 
+"train_loss_std": 0.021271091650433744,                                 
+"train_accuracy_mean": 0.9746272717103195,                              
+"train_accuracy_std": 0.006716743616546124,                             
+"val_loss_mean": 0.11509117217913556,                                   
+"val_loss_std": 0.01734963954698643,                                    
+"val_accuracy_mean": 0.9627477525201106,                                
+"val_accuracy_std": 0.005571161200967543,                               
+"test_loss_mean": 0.34043287715068454,                                  
+"test_loss_std": 0.086842181381673,                                     
+"test_accuracy_mean": 0.8619535349393429,                               
+"test_accuracy_std": 0.03815758499281301 
 ```
+* time elapsed: 17 mins
 
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
+### `training.py` with `"add_residual": false, "add_IC": false`
 
-saved/0722_232910_cross-val-results.json
+* ('lr', 0.0003943508299495083)
 
-```
-"train_loss_mean": 0.3137280245500197,
-"train_loss_std": 0.019206143581372112,
-"train_accuracy_mean": 0.900754738082648,
-"train_accuracy_std": 0.011260066834356295,
-"val_loss_mean": 0.44068487366180586,
-"val_loss_std": 0.014698732238824862,
-"val_accuracy_mean": 0.8494826128204466,
-"val_accuracy_std": 0.012637675231786879,
-"test_loss_mean": 1.0887040289923942,
-"test_loss_std": 0.04963626723408415,
-"test_accuracy_mean": 0.5980103764445449,
-"test_accuracy_std": 0.020127804811253428
-```
-
-## Age (101 classes, cross entropy loss)
-
-### Train on IMDB and WIKI
-
-
-2021-07-23 00:05:18,748 INFO tune.py:549 -- Total run time: 2908.05 seconds (2907.85 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 1), ('num_blocks', 2), ('batch_size', 256), ('lr', 0.0035753161317240803), ('weight_decay', 3.584710633004188e-06), ('gamma', 0.0004325327646962347), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 101), ('validation_split', 0.1)])
-Best trial final validation loss: 3.494242325807229
-Best trial final validation accuracy: 0.07319522912743252
+#### imdb_wiki
 
 ```
-2021-07-23 00:14:53,570 - trainer - INFO -     epoch          : 4
-2021-07-23 00:14:53,570 - trainer - INFO -     loss           : 3.434894827414546
-2021-07-23 00:14:53,570 - trainer - INFO -     accuracy       : 0.07994525716521166
-2021-07-23 00:14:53,570 - trainer - INFO -     val_loss       : 3.494174796801347
-2021-07-23 00:14:53,571 - trainer - INFO -     val_accuracy   : 0.07479777989610964
-2021-07-23 00:14:53,584 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0723_001214/checkpoint-epoch4.pth ...
-2021-07-23 00:14:53,602 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 19:20:03,976 - trainer - INFO -     epoch          : 10              
+2021-08-03 19:20:03,976 - trainer - INFO -     loss           : 0.42602775547438054
+2021-08-03 19:20:03,976 - trainer - INFO -     accuracy       : 0.8312675012353814
+2021-08-03 19:20:03,976 - trainer - INFO -     val_loss       : 0.44402438211135375
+2021-08-03 19:20:03,976 - trainer - INFO -     val_accuracy   : 0.8237058604111406
+2021-08-03 19:20:04,010 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_191409/checkpoint-epoch10.pth ...
+2021-08-03 19:20:04,048 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 10 mins
 
-### Train on IMDB, WIKI, and Adience
-
-2021-07-23 00:06:09,607 INFO tune.py:549 -- Total run time: 2768.49 seconds (2768.31 seconds for the tuning loop).
-Best trial config: OrderedDict([('last_activation', None), ('min_bound', None), ('max_bound', None), ('criterion', 'cse'), ('gender_or_age', 'age'), ('only_MLP', True), ('dropout', 0), ('num_residuals_per_block', 1), ('num_blocks', 2), ('batch_size', 256), ('lr', 0.0035753161317240803), ('weight_decay', 3.584710633004188e-06), ('gamma', 0.0004325327646962347), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki_adience'), ('num_samples', 50), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 101), ('validation_split', 0.1)])
-Best trial final validation loss: 3.4445898386598364
-Best trial final validation accuracy: 0.0911870936672285
+#### imdb_wiki_adience
 
 ```
-2021-07-23 00:14:31,880 - trainer - INFO -     epoch          : 3
-2021-07-23 00:14:31,880 - trainer - INFO -     loss           : 3.381837900169576
-2021-07-23 00:14:31,880 - trainer - INFO -     accuracy       : 0.0992230278918549
-2021-07-23 00:14:31,880 - trainer - INFO -     val_loss       : 3.4402417098086304
-2021-07-23 00:14:31,881 - trainer - INFO -     val_accuracy   : 0.09004703696847895
-2021-07-23 00:14:31,896 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0723_001225/checkpoint-epoch3.pth ...
-2021-07-23 00:14:31,918 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-03 19:29:41,551 - trainer - INFO -     epoch          : 5               
+2021-08-03 19:29:41,551 - trainer - INFO -     loss           : 0.4150009904105234
+2021-08-03 19:29:41,551 - trainer - INFO -     accuracy       : 0.8357851001026694
+2021-08-03 19:29:41,551 - trainer - INFO -     val_loss       : 0.4286481776486145
+2021-08-03 19:29:41,551 - trainer - INFO -     val_accuracy   : 0.8327824201396236
+2021-08-03 19:29:41,577 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0803_192633/checkpoint-epoch5.pth ...
+2021-08-03 19:29:41,613 - trainer - INFO - Saving current best: model_best.pth ...
 ```
+* time elapsed: 6 mins
 
-### Train on Adience from scratch (5 times 5-fold cross validation)
-
-saved/0723_002526_cross-val-results.json
-
-```
-"train_loss_mean": 1.6340719273702822,
-"train_loss_std": 0.07070868060920533,
-"train_accuracy_mean": 0.3086391164157737,
-"train_accuracy_std": 0.021769419883324335,
-"val_loss_mean": 1.6634917458777645,
-"val_loss_std": 0.05151901331374509,
-"val_accuracy_mean": 0.30353138495874155,
-"val_accuracy_std": 0.014031408228725653,
-"test_loss_mean": 1.8142997765515412,
-"test_loss_std": 0.13583505408942959,
-"test_accuracy_mean": 0.3007147665017866,
-"test_accuracy_std": 0.07380871865494001
-```
-
-
-### Pre-trained on IMDB and WIKI, fine-tune on Adience (5 times 5-fold cross validation)
-
-saved/0723_081829_cross-val-results.json
+#### cross-val on adience, from random initialization
 
 ```
-"train_loss_mean": 0.44421417788322914,
-"train_loss_std": 0.02372537339643898,
-"train_accuracy_mean": 0.8417264881033596,
-"train_accuracy_std": 0.01714717947285312,
-"val_loss_mean": 0.5503468283981173,
-"val_loss_std": 0.032659087619235215,
-"val_accuracy_mean": 0.7967200603849287,
-"val_accuracy_std": 0.021768412713477465,
-"test_loss_mean": 1.1914044722275472,
-"test_loss_std": 0.0962698188750242,
-"test_accuracy_mean": 0.5648832129769986,
-"test_accuracy_std": 0.04092359810627668
+"train_loss_mean": 0.6907346900355976,                                  
+"train_loss_std": 0.0013145803689440204,                                
+"train_accuracy_mean": 0.5336449299202591,                              
+"train_accuracy_std": 0.007950648528364619,                             
+"val_loss_mean": 0.6906658022175723,                                    
+"val_loss_std": 0.0009101257046015031,                                  
+"val_accuracy_mean": 0.5360675608998604,                                
+"val_accuracy_std": 0.006592316413961109,                               
+"test_loss_mean": 0.6917365946485787,                                   
+"test_loss_std": 0.004936763252845446,                                  
+"test_accuracy_mean": 0.5358384483326789,                               
+"test_accuracy_std": 0.025814188969479  
 ```
+* time elapsed: 11 mins
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+"train_loss_mean": 0.05266124948346498,                                 
+"train_loss_std": 0.003660504798093344,                                 
+"train_accuracy_mean": 0.9853635179329782,                              
+"train_accuracy_std": 0.001421638410017778,                             
+"val_loss_mean": 0.10465143326075514,                                   
+"val_loss_std": 0.013137950302336387,                                   
+"val_accuracy_mean": 0.9697618674917916,                                
+"val_accuracy_std": 0.004438335739604548,                               
+"test_loss_mean": 0.27407862231075136,                                  
+"test_loss_std": 0.07626170155366795,                                   
+"test_accuracy_mean": 0.9038577370589581,                               
+"test_accuracy_std": 0.02926999036433687 
+```
+* time elapsed: 12 mins
+
+
+## Age, 8 classes
+
+### `hp-tuning.py` with `hp-tuning.json` (below)
+```
+{
+    "criterion": "cse",
+    "gender_or_age": "age",
+    "add_residual": true,
+    "add_IC": true,
+    "dropout": [
+        0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5
+    ],
+    "num_residuals_per_block": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "num_blocks": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "batch_size": [
+        256,
+        512
+    ],
+    "lr": [
+        1e-6,
+        1e-1
+    ],
+    "weight_decay": [
+        1e-6,
+        1e-1
+    ],
+    "gamma": [
+        1e-6,
+        1
+    ],
+    "data_dir": "/home/tk/repos/age-gender/data",
+    "cpus": 8,
+    "dataset": "imdb_wiki",
+    "num_samples": 100,
+    "max_num_epochs": 10,
+    "gpus_per_trial": 1,
+    "limit_data": null,
+    "amp": true,
+    "num_classes": 8,
+    "validation_split": 0.1
+}
+```
+
+```
+2021-08-04 00:09:54,261 INFO tune.py:549 -- Total run time: 5026.78 seconds (5026.51 seconds for the tuning loop).
+Best trial config: OrderedDict([('criterion', 'cse'), ('gender_or_age', 'age'), ('add_residual', True), ('add_IC', True), ('dropout', 0.0), ('num_residuals_per_block', 2), ('num_blocks', 3), ('batch_size', 512), ('lr', 0.0030374373651663737), ('weight_decay', 0.00011436840694269902), ('gamma', 0.17615932159571032), ('data_dir', '/home/tk/repos/age-gender/data'), ('cpus', 8), ('dataset', 'imdb_wiki'), ('num_samples', 100), ('max_num_epochs', 10), ('gpus_per_trial', 1), ('limit_data', None), ('amp', True), ('num_classes', 8), ('validation_split', 0.1)])
+Best trial final validation loss: 1.0998443961143494
+Best trial final validation accuracy: 0.5889516635279347
+```
+* time elapsed: 1 hour 23 mins
+
+### `training.py` with `"add_residual": true, "add_IC": true`
+
+#### imdb_wiki
+
+```
+2021-08-04 00:20:35,084 - trainer - INFO -     epoch          : 3               
+2021-08-04 00:20:35,084 - trainer - INFO -     loss           : 0.9703453184024413
+2021-08-04 00:20:35,084 - trainer - INFO -     accuracy       : 0.6441737593273346
+2021-08-04 00:20:35,084 - trainer - INFO -     val_loss       : 1.0886048193161304
+2021-08-04 00:20:35,084 - trainer - INFO -     val_accuracy   : 0.589514107859358
+2021-08-04 00:20:35,114 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_001903/checkpoint-epoch3.pth ...
+2021-08-04 00:20:35,146 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 4 mins
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed:
+
+### `training.py` with `"add_residual": true, "add_IC": false`
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed:
+
+### `training.py` with `"add_residual": false, "add_IC": true`
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed: 
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed: 
+
+### `training.py` with `"add_residual": false, "add_IC": false`
+
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed: 
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed: 
+
+## Age, 101 classes
+
+### `hp-tuning.py` with `hp-tuning.json` (below)
+```
+```
+
+```
+```
+* time elapsed:
+
+### `training.py` with `"add_residual": true, "add_IC": true`
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed:
+
+### `training.py` with `"add_residual": true, "add_IC": false`
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed:
+
+### `training.py` with `"add_residual": false, "add_IC": true`
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed: 
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed: 
+
+### `training.py` with `"add_residual": false, "add_IC": false`
+
+
+#### imdb_wiki
+
+```
+```
+* time elapsed:
+
+#### imdb_wiki_adience
+
+```
+```
+* time elapsed:
+
+#### cross-val on adience, from random initialization
+
+```
+```
+* time elapsed: 
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+```
+* time elapsed: 
