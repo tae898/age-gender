@@ -4,28 +4,26 @@
     "add_residual": true,
     "add_IC": true,
     "dropout": [
-        0,
-        0.1,
-        0.2,
-        0.3,
-        0.4,
-        0.5
+        0.05
     ],
     "num_residuals_per_block": [
         0,
         1,
         2,
         3,
-        4
+        4,
+        5
     ],
     "num_blocks": [
         0,
         1,
         2,
         3,
-        4
+        4,
+        5
     ],
     "batch_size": [
+        128,
         256,
         512
     ],
@@ -49,6 +47,6 @@
     "gpus_per_trial": 1,
     "limit_data": null,
     "amp": true,
-    "num_classes": 8,
+    "num_classes": 101,
     "validation_split": 0.1
 }

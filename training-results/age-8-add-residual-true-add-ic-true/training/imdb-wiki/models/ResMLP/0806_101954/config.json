@@ -1,0 +1,56 @@
+{
+    "name": "ResMLP",
+    "n_gpu": 1,
+    "amp": true,
+    "checkpoint": null,
+    "arch": {
+        "type": "ResMLP",
+        "args": {
+            "dropout": 0.05,
+            "num_residuals_per_block": 1,
+            "num_blocks": 2,
+            "num_classes": 8,
+            "num_initial_features": 512,
+            "add_residual": true,
+            "add_IC": true
+        }
+    },
+    "data_loader": {
+        "type": "AgeDataLoader",
+        "args": {
+            "data_dir": "data/",
+            "batch_size": 128,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 8,
+            "dataset": "imdb_wiki",
+            "num_classes": 8
+        }
+    },
+    "optimizer": {
+        "type": "AdamW",
+        "args": {
+            "lr": 0.0011670137678831,
+            "weight_decay": 0.00012337159555124116
+        }
+    },
+    "loss": "cse",
+    "metrics": [
+        "accuracy"
+    ],
+    "lr_scheduler": {
+        "type": "ExponentialLR",
+        "args": {
+            "gamma": 0.3947943239814273
+        }
+    },
+    "trainer": {
+        "epochs": 30,
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 5,
+        "tensorboard": true
+    }
+}

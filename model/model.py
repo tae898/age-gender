@@ -23,31 +23,28 @@ class Residual(nn.Module):
         self.i = i
         self.j = j
 
-        if not ((self.i == 0) and (self.j == 0) and (not self.add_residual)):
-            self.relu1 = nn.ReLU()
-        if self.add_IC:
+        if (not ((self.i == 0) and (self.j == 0))) and self.add_IC:
             self.norm_layer1 = nn.BatchNorm1d(num_features)
             self.dropout1 = nn.Dropout(p=dropout)
         self.linear1 = nn.Linear(num_features, num_features)
+        self.relu1 = nn.ReLU()
 
-        self.relu2 = nn.ReLU()
         if self.add_IC:
             self.norm_layer2 = nn.BatchNorm1d(num_features)
             self.dropout2 = nn.Dropout(p=dropout)
         self.linear2 = nn.Linear(num_features, num_features)
+        self.relu2 = nn.ReLU()
 
     def forward(self, x: torch.tensor) -> torch.tensor:
 
         identity = out = x
 
-        if not ((self.i == 0) and (self.j == 0) and (not self.add_residual)):
-            out = self.relu1(out)
-        if self.add_IC:
+        if (not ((self.i == 0) and (self.j == 0))) and self.add_IC:
             out = self.norm_layer1(out)
             out = self.dropout1(out)
         out = self.linear1(out)
+        out = self.relu1(out)
 
-        out = self.relu2(out)
         if self.add_IC:
             out = self.norm_layer2(out)
             out = self.dropout2(out)
@@ -55,6 +52,8 @@ class Residual(nn.Module):
 
         if self.add_residual:
             out += identity
+
+        out = self.relu2(out)
 
         return out
 
@@ -76,20 +75,20 @@ class DownSample(nn.Module):
         self.out_features = out_features
         self.add_IC = add_IC
 
-        self.relu = nn.ReLU()
         if self.add_IC:
             self.norm_layer = nn.BatchNorm1d(in_features)
             self.dropout = nn.Dropout(p=dropout)
         self.linear = nn.Linear(in_features, out_features)
+        self.relu = nn.ReLU()
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         out = x
 
-        out = self.relu(out)
         if self.add_IC:
             out = self.norm_layer(out)
             out = self.dropout(out)
         out = self.linear(out)
+        out = self.relu(out)
 
         return out
 
@@ -116,8 +115,7 @@ class ResMLP(BaseModel):
             num_initial_features //= 2
 
         # last classiciation layer
-        blocks.append(DownSample(num_initial_features,
-                                 num_classes, dropout, add_IC))
+        blocks.append(nn.Linear(num_initial_features, num_classes))
 
         self.blocks = nn.Sequential(*blocks)
 
