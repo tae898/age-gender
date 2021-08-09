@@ -5,6 +5,8 @@ import numpy as np
 import io
 from model.model import ResMLP
 import torch
+from utils import read_json, forward_mc, enable_dropout
+from tqdm import tqdm
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -15,37 +17,30 @@ logging.basicConfig(
 # a light-weight flask app
 app = Flask(__name__)
 
-# load the gender model to cpu
-device = torch.device('cpu')
-model_gender = ResMLP(dropout=0.5, num_residuals_per_block=3, num_blocks=1,
-                      num_classes=2, num_initial_features=512, last_activation=None,
-                      min_bound=None, max_bound=None, only_MLP=False)
+models = {'age': None, 'gender': None}
 
-checkpoint = "models/gender.pth"
-checkpoint = torch.load(checkpoint, map_location=torch.device('cpu'))
-state_dict = checkpoint['state_dict']
-model_gender.load_state_dict(state_dict)
-model_gender.to(device)
-model_gender.eval()
+device = "cpu"
+if torch.cuda.is_available():
+    device = "cuda:0"
 
-# load the age model to cpu
-model_age = ResMLP(dropout=0.2, num_residuals_per_block=4, num_blocks=0,
-                   num_classes=101, num_initial_features=512, last_activation=None,
-                   min_bound=None, max_bound=None, only_MLP=False)
+for model_ in ['age', 'gender']:
+    model = ResMLP(**read_json(f'./models/{model_}.json')['arch']['args'])
+    checkpoint = f"models/{model_}.pth"
+    checkpoint = torch.load(checkpoint, map_location=torch.device(device))
+    state_dict = checkpoint['state_dict']
+    model.load_state_dict(state_dict)
+    model.to(device)
+    model.eval()
+    enable_dropout(model)
 
-checkpoint = "models/age.pth"
-checkpoint = torch.load(checkpoint, map_location=torch.device('cpu'))
-state_dict = checkpoint['state_dict']
-model_age.load_state_dict(state_dict)
-model_age.to(device)
-model_age.eval()
+    models[model_] = model
 
 # One endpoint is enough.
+
+
 @app.route("/", methods=["POST"])
 def predict_age_gender():
-    """
-    Receive everything in json!!!
-
+    """Receive everything in json!!!
     """
     app.logger.debug(f"Receiving data ...")
     data = request.json
@@ -56,30 +51,35 @@ def predict_age_gender():
     embeddings = io.BytesIO(embeddings)
 
     # This assumes that the client has serialized the embeddings with pickle.
-    # before sending it to the server. 
+    # before sending it to the server.
     embeddings = np.load(embeddings, allow_pickle=True)
 
     # -1 accounts for the batch size.
     embeddings = embeddings.reshape(-1, 512).astype(np.float32)
-    embeddings = torch.tensor(embeddings)
 
-    app.logger.debug(f"extracting gender and age ...")
-    genders = model_gender(embeddings)
-    ages = model_age(embeddings)
+    app.logger.debug(
+        f"extracting gender and age from {embeddings.shape[0]} faces ...")
 
-    genders = torch.softmax(genders, dim=1)
-    genders = genders.detach().cpu().numpy()
-    genders = [{'m': gender[0].item(), 'f': gender[1].item()}
-               for gender in genders]
+    genders = []
+    ages = []
 
-    ages = torch.softmax(ages, dim=1)
-    ages = torch.argmax(ages, dim=1)
-    ages = ages.detach().cpu().numpy()
-    ages = [np.arange(0, 101)[age].item() for age in ages]
+    for embedding in tqdm(embeddings):
+        embedding = embedding.reshape(1, 512)
+        gender_mean, gender_entropy = forward_mc(models['gender'], embedding)
+        age_mean, age_entropy = forward_mc(models['age'], embedding)
+        gender = {'m': 1 - gender_mean,
+                  'f': gender_mean,
+                  'entropy': gender_entropy}
+        age = {'mean': age_mean,
+               'entropy': age_entropy}
 
-    app.logger.debug(f"{len(ages)} gender and age extracted!")
+        genders.append(gender)
+        ages.append(age)
 
-    response = {'ages': ages, 'genders': genders}
+    app.logger.debug(f"gender and age extracted!")
+
+    response = {'ages': ages,
+                'genders': genders}
 
     response_pickled = jsonpickle.encode(response)
     app.logger.info("json-pickle is done.")

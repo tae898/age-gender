@@ -8,6 +8,7 @@ import logging
 from PIL import Image, ImageDraw, ImageFont
 import pickle
 import numpy as np
+import io
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -19,8 +20,13 @@ logging.basicConfig(
 def main(url_face: str, url_age_gender: str, image_path: str):
 
     logging.debug(f"loading image ...")
-    with open(image_path, 'rb') as stream:
-        binary_image = stream.read()
+    if isinstance(image_path, str):
+        with open(image_path, 'rb') as stream:
+            binary_image = stream.read()
+    elif isinstance(image_path, Image.Image):
+        binary_image = io.BytesIO()
+        image_path.save(binary_image, format='JPEG')
+        binary_image = binary_image.getvalue()
 
     data = {'image': binary_image}
     logging.info(f"image loaded!")
