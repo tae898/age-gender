@@ -91,7 +91,7 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 11:15:24,305 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_111344/checkpoint-epoch3.pth ...
 2021-08-06 11:15:24,329 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed:
+* time elapsed: 4 mins
 
 #### cross-val on adience, from random initialization
 
@@ -128,6 +128,69 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_std": 0.025486444846123855  
 ```
 * time elapsed: 14 mins
+
+### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
+
+#### imdb_wiki
+```
+2021-08-10 22:08:13,279 - trainer - INFO -     epoch          : 2               
+2021-08-10 22:08:13,279 - trainer - INFO -     loss           : 0.43079286286562213
+2021-08-10 22:08:13,279 - trainer - INFO -     accuracy       : 0.828756395396686
+2021-08-10 22:08:13,279 - trainer - INFO -     val_loss       : 0.4433213919401169
+2021-08-10 22:08:13,279 - trainer - INFO -     val_accuracy   : 0.8230409303264276
+2021-08-10 22:08:13,298 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_220715/checkpoint-epoch2.pth ...
+2021-08-10 22:08:13,320 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 3 mins
+
+#### imdb_wiki_adience
+
+```
+2021-08-10 22:18:18,582 - trainer - INFO -     epoch          : 12              
+2021-08-10 22:18:18,582 - trainer - INFO -     loss           : 0.40934557044718073
+2021-08-10 22:18:18,582 - trainer - INFO -     accuracy       : 0.8365119485294118
+2021-08-10 22:18:18,582 - trainer - INFO -     val_loss       : 0.427110567325499
+2021-08-10 22:18:18,582 - trainer - INFO -     val_accuracy   : 0.8331712573591252
+2021-08-10 22:18:18,604 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_221247/checkpoint-epoch12.pth ...
+2021-08-10 22:18:18,627 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 8 mins
+
+#### cross-val on adience, from random initialization
+
+```
+"train_loss_mean": 0.04592202911063537,                                 
+"train_loss_std": 0.004968584913553469,                                 
+"train_accuracy_mean": 0.9874470878705587,                              
+"train_accuracy_std": 0.0020352231866869945,                            
+"val_loss_mean": 0.10436273033332649,                                   
+"val_loss_std": 0.010926707221016262,                                   
+"val_accuracy_mean": 0.9672422859006637,                                
+"val_accuracy_std": 0.0039099967107252545,                              
+"test_loss_mean": 0.4047493383832665,                                   
+"test_loss_std": 0.08096214807019218,                                   
+"test_accuracy_mean": 0.8412609429948891,                               
+"test_accuracy_std": 0.03257054909731762 
+```
+* time elapsed: 11 mins
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+"train_loss_mean": 0.04001438188234187,                                 
+"train_loss_std": 0.002662775959211709,                                 
+"train_accuracy_mean": 0.9898581723087919,                              
+"train_accuracy_std": 0.0013010347725655978,                            
+"val_loss_mean": 0.08413476834629004,                                   
+"val_loss_std": 0.01292393044734325,                                    
+"val_accuracy_mean": 0.975305017750686,                                 
+"val_accuracy_std": 0.004178405528355561,                               
+"test_loss_mean": 0.2767549877755469,                                   
+"test_loss_std": 0.04573368326324859,                                   
+"test_accuracy_mean": 0.8985643474512477,                               
+"test_accuracy_std": 0.019786984421465842 
+```
+* time elapsed: 11 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": false`
 
@@ -458,6 +521,69 @@ Best trial final validation accuracy: 0.6075078468298807
 ```
 * time elapsed: 12 mins
 
+### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
+
+#### imdb_wiki
+```
+2021-08-10 22:53:17,742 - trainer - INFO -     epoch          : 3               
+2021-08-10 22:53:17,742 - trainer - INFO -     loss           : 0.9536550090977738
+2021-08-10 22:53:17,742 - trainer - INFO -     accuracy       : 0.648150428761706
+2021-08-10 22:53:17,742 - trainer - INFO -     val_loss       : 1.0512601311008136
+2021-08-10 22:53:17,742 - trainer - INFO -     val_accuracy   : 0.6079815940799397
+2021-08-10 22:53:17,756 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_225113/checkpoint-epoch3.pth ...
+2021-08-10 22:53:17,772 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 6 mins
+
+#### imdb_wiki_adience
+
+```
+2021-08-10 23:00:41,169 - trainer - INFO -     epoch          : 3               
+2021-08-10 23:00:41,169 - trainer - INFO -     loss           : 0.9330769831372712
+2021-08-10 23:00:41,169 - trainer - INFO -     accuracy       : 0.6562687221841835
+2021-08-10 23:00:41,169 - trainer - INFO -     val_loss       : 1.0317825368734506
+2021-08-10 23:00:41,169 - trainer - INFO -     val_accuracy   : 0.6116594827586207
+2021-08-10 23:00:41,184 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_225830/checkpoint-epoch3.pth ...
+2021-08-10 23:00:41,200 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 5 mins
+
+#### cross-val on adience, from random initialization
+
+```
+"train_loss_mean": 0.013941981335008236,                                
+"train_loss_std": 0.007885955564931187,                                 
+"train_accuracy_mean": 0.997617532525551,                               
+"train_accuracy_std": 0.0019260988475181665,                            
+"val_loss_mean": 0.2259103509116806,                                    
+"val_loss_std": 0.03026346091433157,                                    
+"val_accuracy_mean": 0.9343314553121053,                                
+"val_accuracy_std": 0.008585943300323896,                               
+"test_loss_mean": 1.630005555533395,                                    
+"test_loss_std": 0.1814841816338231,                                    
+"test_accuracy_mean": 0.5437349798897955,                               
+"test_accuracy_std": 0.041431485692379325
+```
+* time elapsed: 10 mins
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+"train_loss_mean": 0.04534863889891378,                                 
+"train_loss_std": 0.014506021874636463,                                 
+"train_accuracy_mean": 0.9906178504100869,                              
+"train_accuracy_std": 0.0035657771597591248,                            
+"val_loss_mean": 0.2720936881686342,                                    
+"val_loss_std": 0.026239852390827344,                                   
+"val_accuracy_mean": 0.9156365333860214,                                
+"val_accuracy_std": 0.008090294644058521,                               
+"test_loss_mean": 1.3588867473645496,                                   
+"test_loss_std": 0.07740114339086229,                                   
+"test_accuracy_mean": 0.5968017863017355,                               
+"test_accuracy_std": 0.0186838841831273
+```
+* time elapsed: 10 mins
+
 ### `training.py` with `"add_residual": true, "add_IC": false`
 
 #### imdb_wiki
@@ -781,6 +907,69 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_std": 0.023349385815310295 
 ```
 * time elapsed: 14 mins
+
+### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
+
+#### imdb_wiki
+```
+2021-08-10 23:32:11,944 - trainer - INFO -     epoch          : 3               
+2021-08-10 23:32:11,945 - trainer - INFO -     loss           : 3.1153518415612433
+2021-08-10 23:32:11,945 - trainer - INFO -     accuracy       : 0.1877063995001785
+2021-08-10 23:32:11,945 - trainer - INFO -     val_loss       : 3.2872802370633836
+2021-08-10 23:32:11,945 - trainer - INFO -     val_accuracy   : 0.15788055005656107
+2021-08-10 23:32:11,960 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_233003/checkpoint-epoch3.pth ...
+2021-08-10 23:32:11,977 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 6 mins
+
+#### imdb_wiki_adience
+
+```
+2021-08-10 23:39:23,557 - trainer - INFO -     epoch          : 3               
+2021-08-10 23:39:23,558 - trainer - INFO -     loss           : 3.0302734688429425
+2021-08-10 23:39:23,558 - trainer - INFO -     accuracy       : 0.2121811879493324
+2021-08-10 23:39:23,558 - trainer - INFO -     val_loss       : 3.2037021651634805
+2021-08-10 23:39:23,558 - trainer - INFO -     val_accuracy   : 0.18155421087533158
+2021-08-10 23:39:23,572 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_233712/checkpoint-epoch3.pth ...
+2021-08-10 23:39:23,588 - trainer - INFO - Saving current best: model_best.pth ...
+```
+* time elapsed: 6 mins
+
+#### cross-val on adience, from random initialization
+
+```
+"train_loss_mean": 0.017032788165818446,                                
+"train_loss_std": 0.004706186021496336,                                 
+"train_accuracy_mean": 0.9972558031465577,                              
+"train_accuracy_std": 0.0008681205524060541,                            
+"val_loss_mean": 0.23448244291745723,                                   
+"val_loss_std": 0.027292528189579012,                                   
+"val_accuracy_mean": 0.9325784941969336,                                
+"val_accuracy_std": 0.007301875082802385,                               
+"test_loss_mean": 1.6318892459315955,                                   
+"test_loss_std": 0.15858648723166602,                                   
+"test_accuracy_mean": 0.5476791019342407,                               
+"test_accuracy_std": 0.035446737871884244  
+```
+* time elapsed: 11 mins
+
+#### cross-val on adience, pretrained on imdb_wiki
+
+```
+"train_loss_mean": 0.04437869559662234,                                 
+"train_loss_std": 0.012701954716739005,                                 
+"train_accuracy_mean": 0.9918182653022005,                              
+"train_accuracy_std": 0.0028055626912445683,                            
+"val_loss_mean": 0.26793492241125505,                                   
+"val_loss_std": 0.027698279176450572,                                   
+"val_accuracy_mean": 0.919607849371705,                                 
+"val_accuracy_std": 0.007822749846796135,                               
+"test_loss_mean": 1.4226110422261125,                                   
+"test_loss_std": 0.14027027999068215,                                   
+"test_accuracy_mean": 0.591592747685539,                                
+"test_accuracy_std": 0.03617848265492994 
+```
+* time elapsed: 11 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": false`
 

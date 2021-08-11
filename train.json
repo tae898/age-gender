@@ -6,32 +6,32 @@
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": 0.05,
+            "dropout": 0.00,
             "num_residuals_per_block": 1,
-            "num_blocks": 4,
-            "num_classes": 2,
+            "num_blocks": 2,
+            "num_classes": 101,
             "num_initial_features": 512,
-            "add_residual": false,
-            "add_IC": false
+            "add_residual": true,
+            "add_IC": true
         }
     },
     "data_loader": {
-        "type": "GenderDataLoader",
+        "type": "AgeDataLoader",
         "args": {
             "data_dir": "data/",
-            "batch_size": 512,
+            "batch_size": 128,
             "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 8,
             "dataset": "imdb_wiki_adience",
-            "num_classes": 2
+            "num_classes": 101
         }
     },
     "optimizer": {
         "type": "AdamW",
         "args": {
-            "lr": 0.00243983281217744,
-            "weight_decay": 0.004735384181058588
+            "lr": 0.0011670137678831,
+            "weight_decay": 0.00012337159555124116
         }
     },
     "loss": "cse",
@@ -41,7 +41,7 @@
     "lr_scheduler": {
         "type": "ExponentialLR",
         "args": {
-            "gamma": 0.06620420614596553
+            "gamma": 0.3947943239814273
         }
     },
     "trainer": {
