@@ -1,0 +1,94 @@
+2021-08-05 15:59:39,114 - root - INFO - test cross val is None
+2021-08-05 15:59:41,047 - train - INFO - ResMLP(
+  (blocks): Sequential(
+    (0): Residual(
+      (linear1): Linear(in_features=512, out_features=512, bias=True)
+      (relu1): ReLU()
+      (norm_layer2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (dropout2): Dropout(p=0.05, inplace=False)
+      (linear2): Linear(in_features=512, out_features=512, bias=True)
+      (relu2): ReLU()
+    )
+    (1): DownSample(
+      (norm_layer): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (dropout): Dropout(p=0.05, inplace=False)
+      (linear): Linear(in_features=512, out_features=256, bias=True)
+      (relu): ReLU()
+    )
+    (2): Residual(
+      (norm_layer1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (dropout1): Dropout(p=0.05, inplace=False)
+      (linear1): Linear(in_features=256, out_features=256, bias=True)
+      (relu1): ReLU()
+      (norm_layer2): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (dropout2): Dropout(p=0.05, inplace=False)
+      (linear2): Linear(in_features=256, out_features=256, bias=True)
+      (relu2): ReLU()
+    )
+    (3): DownSample(
+      (norm_layer): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (dropout): Dropout(p=0.05, inplace=False)
+      (linear): Linear(in_features=256, out_features=128, bias=True)
+      (relu): ReLU()
+    )
+    (4): Linear(in_features=128, out_features=8, bias=True)
+  )
+)
+Trainable parameters: 825736
+2021-08-05 16:00:29,766 - trainer - INFO -     epoch          : 1
+2021-08-05 16:00:29,766 - trainer - INFO -     loss           : 1.1948075079568918
+2021-08-05 16:00:29,766 - trainer - INFO -     accuracy       : 0.526904668319007
+2021-08-05 16:00:29,766 - trainer - INFO -     val_loss       : 1.1197297639953785
+2021-08-05 16:00:29,766 - trainer - INFO -     val_accuracy   : 0.5665741657239819
+2021-08-05 16:00:29,781 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch1.pth ...
+2021-08-05 16:00:29,795 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-05 16:01:14,148 - trainer - INFO -     epoch          : 2
+2021-08-05 16:01:14,149 - trainer - INFO -     loss           : 1.0635519176242778
+2021-08-05 16:01:14,149 - trainer - INFO -     accuracy       : 0.5955063267239722
+2021-08-05 16:01:14,149 - trainer - INFO -     val_loss       : 1.0712629816471002
+2021-08-05 16:01:14,149 - trainer - INFO -     val_accuracy   : 0.5921430170625943
+2021-08-05 16:01:14,172 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch2.pth ...
+2021-08-05 16:01:14,193 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-05 16:01:59,143 - trainer - INFO -     epoch          : 3
+2021-08-05 16:01:59,143 - trainer - INFO -     loss           : 0.9870204366730265
+2021-08-05 16:01:59,143 - trainer - INFO -     accuracy       : 0.6341343579216213
+2021-08-05 16:01:59,143 - trainer - INFO -     val_loss       : 1.0532616212581978
+2021-08-05 16:01:59,143 - trainer - INFO -     val_accuracy   : 0.6026848840497738
+2021-08-05 16:01:59,158 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch3.pth ...
+2021-08-05 16:01:59,175 - trainer - INFO - Saving current best: model_best.pth ...
+2021-08-05 16:02:43,509 - trainer - INFO -     epoch          : 4
+2021-08-05 16:02:43,509 - trainer - INFO -     loss           : 0.9379442182663125
+2021-08-05 16:02:43,509 - trainer - INFO -     accuracy       : 0.6573234061324252
+2021-08-05 16:02:43,510 - trainer - INFO -     val_loss       : 1.0552560131137187
+2021-08-05 16:02:43,510 - trainer - INFO -     val_accuracy   : 0.6036113664215687
+2021-08-05 16:02:43,526 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch4.pth ...
+2021-08-05 16:03:27,881 - trainer - INFO -     epoch          : 5
+2021-08-05 16:03:27,881 - trainer - INFO -     loss           : 0.9132368327974635
+2021-08-05 16:03:27,882 - trainer - INFO -     accuracy       : 0.6686279625408508
+2021-08-05 16:03:27,882 - trainer - INFO -     val_loss       : 1.0606885600166442
+2021-08-05 16:03:27,882 - trainer - INFO -     val_accuracy   : 0.6055409243024132
+2021-08-05 16:03:27,896 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch5.pth ...
+2021-08-05 16:04:11,835 - trainer - INFO -     epoch          : 6
+2021-08-05 16:04:11,836 - trainer - INFO -     loss           : 0.9026308148854633
+2021-08-05 16:04:11,836 - trainer - INFO -     accuracy       : 0.6729005609260429
+2021-08-05 16:04:11,836 - trainer - INFO -     val_loss       : 1.060124189616778
+2021-08-05 16:04:11,836 - trainer - INFO -     val_accuracy   : 0.603936887254902
+2021-08-05 16:04:11,850 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch6.pth ...
+2021-08-05 16:04:56,028 - trainer - INFO -     epoch          : 7
+2021-08-05 16:04:56,028 - trainer - INFO -     loss           : 0.8986693796027094
+2021-08-05 16:04:56,029 - trainer - INFO -     accuracy       : 0.6746712626671794
+2021-08-05 16:04:56,029 - trainer - INFO -     val_loss       : 1.065856470893591
+2021-08-05 16:04:56,029 - trainer - INFO -     val_accuracy   : 0.6042373680241327
+2021-08-05 16:04:56,044 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch7.pth ...
+2021-08-05 16:05:40,226 - trainer - INFO -     epoch          : 8
+2021-08-05 16:05:40,226 - trainer - INFO -     loss           : 0.8973450214894317
+2021-08-05 16:05:40,226 - trainer - INFO -     accuracy       : 0.6750042481394007
+2021-08-05 16:05:40,226 - trainer - INFO -     val_loss       : 1.0664465633722453
+2021-08-05 16:05:40,226 - trainer - INFO -     val_accuracy   : 0.6045113357843137
+2021-08-05 16:05:40,240 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155939/checkpoint-epoch8.pth ...
+2021-08-05 16:06:24,448 - trainer - INFO -     epoch          : 9
+2021-08-05 16:06:24,448 - trainer - INFO -     loss           : 0.8954050341958193
+2021-08-05 16:06:24,448 - trainer - INFO -     accuracy       : 0.67573715946228
+2021-08-05 16:06:24,448 - trainer - INFO -     val_loss       : 1.0646133814484646
+2021-08-05 16:06:24,448 - trainer - INFO -     val_accuracy   : 0.6039604543740573
+2021-08-05 16:06:24,448 - trainer - INFO - Validation performance didn't improve for 5 epochs. Training stops.

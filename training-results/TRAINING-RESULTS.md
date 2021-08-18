@@ -1163,3 +1163,39 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_std": 0.03440994418228202 
 ```
 * time elapsed: 9 mins
+
+
+# Summary
+
+## val loss
+
+* **baseline**    3
+* no dropout      2
+* no ic           0
+* no skip         1
+* no ic no skip   0
+    
+## val acc
+
+* **baseline**    4
+* no dropout      2
+* no ic           0
+* no skip         0
+* no ic no skip   0
+
+
+## test loss
+
+* baseline        1
+* no dropout      1
+* **no ic**       4
+* no skip         0
+* no ic no skip   0
+
+## test acc
+
+* **baseline**    2
+* **no dropout**  2
+* **no ic**       2
+* no skip         0
+* no ic no skip   0

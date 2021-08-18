@@ -152,7 +152,7 @@ Resizing image to the same shape (e.g. `resize=640` resizes every image to a bla
 
     Ages
 
-    Ages are fine-grained integers from 0 to 100. Check `./data/imdb_crop/meta-data.json` for the details.
+    Ages are fine-grained integers from 0 to 100. Check `./data/wiki_crop/meta-data.json` for the details.
 
 ## Training
 
