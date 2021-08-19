@@ -229,7 +229,21 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## Citation
+
+Check out the [paper](https://arxiv.org/abs/2108.08186).
+```bibtex
+@misc{kim2021generalizing,
+      title={Generalizing MLPs With Dropouts, Batch Normalization, and Skip Connections}, 
+      author={Taewoon Kim},
+      year={2021},
+      eprint={2108.08186},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
 
 ## Authors
 
 * [Taewoon Kim](https://taewoonkim.com/) 
+
