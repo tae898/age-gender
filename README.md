@@ -1,4 +1,6 @@
 # age-gender
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalizing-mlps-with-dropouts-batch/age-and-gender-classification-on-adience)](https://paperswithcode.com/sota/age-and-gender-classification-on-adience?p=generalizing-mlps-with-dropouts-batch)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalizing-mlps-with-dropouts-batch/age-and-gender-classification-on-adience-age)](https://paperswithcode.com/sota/age-and-gender-classification-on-adience-age?p=generalizing-mlps-with-dropouts-batch)
 
 This repo contains code to train age / gender prediction and run inference on a flask server. The pytorch model training / testing was copied using [this template](https://github.com/victoresque/pytorch-template).
 
