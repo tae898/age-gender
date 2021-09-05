@@ -4,6 +4,8 @@
 
 This repo contains code to train age / gender prediction and run inference on a flask server. The pytorch model training / testing was copied using [this template](https://github.com/victoresque/pytorch-template).
 
+If you are only interested in model inference, go to [this section](#deployment)
+
 ## Prerequisites
 
 1. A unix or unix-like x86 machine
@@ -196,7 +198,9 @@ Check `./test-images` to see the model inference results on some stock images.
 
 We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They are MLPs with dropout, batch norm, and residual connections. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
 
-`app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container. Build the container by running
+`app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container.
+
+Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
 
 
 ### Run it as a docker container.
