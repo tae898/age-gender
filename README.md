@@ -4,6 +4,8 @@
 
 This repo contains code to train age / gender prediction and run inference on a flask server. The pytorch model training / testing was copied using [this template](https://github.com/victoresque/pytorch-template).
 
+Check out [this colab](https://colab.research.google.com/drive/1-PlXm2iQkET4wWO5jB8i0CTlIBtZBqyr?usp=sharing).
+
 ## Datasets
 
 I used [Adience age and gender dataset](https://talhassner.github.io/home/projects/Adience/Adience-data.html). Download the data and place them at `./data/Adience/`.
