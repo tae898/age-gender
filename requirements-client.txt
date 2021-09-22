@@ -1,0 +1,10 @@
+charset-normalizer==2.0.4
+idna==3.2
+importlib-metadata==4.8.1
+jsonpickle==2.0.0
+numpy==1.21.2
+Pillow==8.3.2
+requests==2.26.0
+typing-extensions==3.10.0.2
+urllib3==1.26.6
+zipp==3.5.0

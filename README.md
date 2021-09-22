@@ -4,7 +4,15 @@
 
 This repo contains code to train age / gender prediction and run inference on a flask server. The pytorch model training / testing was copied using [this template](https://github.com/victoresque/pytorch-template).
 
-Check out [this colab](https://colab.research.google.com/drive/1-PlXm2iQkET4wWO5jB8i0CTlIBtZBqyr?usp=sharing).
+Check out [this colab](https://colab.research.google.com/drive/1-PlXm2iQkET4wWO5jB8i0CTlIBtZBqyr?usp=sharing) for demo.
+
+If you are only interested in model inference, go to [this section](#deployment).
+
+## Prerequisites
+
+1. A unix or unix-like x86 machine
+2. [Docker](https://docs.docker.com/engine/install/). Don't be scared by docker. It's really easy and convenient
+3. python 3.7 or higher. Running in a virtual environment (e.g., conda, virtualenv, etc.) is highly recommended so that you don't mess up with the system python.
 
 ## Datasets
 
@@ -188,23 +196,26 @@ Click on the above link to see the detailed results.
 
 Check `./test-images` to see the model inference results on some stock images.
 
-## Deployment (server)
+## Deployment
 
 We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They are MLPs with dropout, batch norm, and residual connections. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
 
-`app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container. Build the container by running
+`app.py` is a flask server app that receives accepts 512-dimensional arcface embeddings and returns estimated genders and ages. You can also run this on a docker container.
+
+Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
 
 
 ### Run it as a docker container.
 
 1. Pull the image from docker hub and run the container.
     ```bash
-    docker run -it --rm -p 10003:10003 tae898/age-gender:latest
+    docker run -it --rm -p 10003:10003 tae898/age-gender
     ```
 
 1. For whatever reason if you want to build it from scratch,
     ```bash
     docker build -t age-gender .  
+    docker run -it --rm -p 10003:10003 age-gender
     ```
 
 ### Run directly.
@@ -219,9 +230,9 @@ We provide the gender and the age models, which are trained on IMDB, WIKI, and A
     python3 app.py
     ```
 
-After running the container (i.e. `docker run -it --rm -p 10003:10003 age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
+After running the container (i.e. `docker run -it --rm -p 10003:10003 tae898/age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
 
-NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
+NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 tae898/face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
 
 ## Contributing
 

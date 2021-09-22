@@ -43,18 +43,16 @@ def main(url_face: str, url_age_gender: str, image_path: str):
     bboxes = [fdr['bbox'] for fdr in face_detection_recognition]
     det_scores = [fdr['det_score'] for fdr in face_detection_recognition]
     landmarks = [fdr['landmark'] for fdr in face_detection_recognition]
-
-    logging.debug(f"sending embeddings to server ...")
-    data = [fdr['normed_embedding'] for fdr in face_detection_recognition]
+    embeddings = [fdr['normed_embedding']
+                  for fdr in face_detection_recognition]
 
     # -1 accounts for the batch size.
-    data = np.array(data).reshape(-1, 512).astype(np.float32)
-
-    # I wanna get rid of this pickling part but dunno how.
+    data = np.array(embeddings).reshape(-1, 512).astype(np.float32)
     data = pickle.dumps(data)
-
     data = {'embeddings': data}
     data = jsonpickle.encode(data)
+
+    logging.debug(f"sending embeddings to server ...")
     response = requests.post(url_age_gender, json=data)
     logging.info(f"got {response} from server!...")
 
@@ -69,13 +67,25 @@ def main(url_face: str, url_age_gender: str, image_path: str):
 
     for gender, age, bbox in zip(genders, ages, bboxes):
         draw.rectangle(bbox.tolist(), outline=(0, 0, 0))
-        draw.text((bbox[0], bbox[1]), "AGE: " +
-                  str(age), fill=(255, 0, 0), font=font)
+        draw.text((bbox[0], bbox[1]), f"AGE: {round(age['mean'])}, ENTROPY: {round(age['entropy'], 4)}",
+                  fill=(255, 0, 0), font=font)
         draw.text((bbox[0], bbox[3]), 'MALE ' + str(round(gender['m']*100)) + str("%") +
-                  ', ' 'FEMALE ' + str(round(gender['f']*100)) + str("%"), fill=(0, 255, 0), font=font)
+                  ', ' 'FEMALE ' + str(round(gender['f']*100)) + str("%") + f", ENTROPY: {round(gender['entropy'], 4)}", fill=(0, 255, 0), font=font)
         image.save(image_path + '.ANNOTATED.jpg')
-    logging.debug(
+    logging.info(
         f"image annotated and saved at {image_path + '.ANNOTATED.jpg'}")
+
+    to_dump = {'bboxes': bboxes,
+               'det_scores': det_scores,
+               'landmarks': landmarks,
+               'embeddings': embeddings,
+               'genders': genders,
+               'ages': ages}
+
+    with open(image_path + '.pkl', 'wb') as stream:
+        pickle.dump(to_dump, stream)
+    logging.info(
+        f"features saved at at {image_path + '.pkl'}")
 
 
 if __name__ == "__main__":
