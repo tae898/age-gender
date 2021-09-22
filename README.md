@@ -4,7 +4,8 @@
 
 This repo contains code to train age / gender prediction and run inference on a flask server. The pytorch model training / testing was copied using [this template](https://github.com/victoresque/pytorch-template).
 
-Check out [this colab](https://colab.research.google.com/drive/1-PlXm2iQkET4wWO5jB8i0CTlIBtZBqyr?usp=sharing) for demo.
+Check out [this colab](https://colab.research.google.com/github/tae898/age-gender/blob/main/age_gender-colab.ipynb) for demo.
+
 
 If you are only interested in model inference, go to [this section](#deployment).
 
