@@ -35,7 +35,7 @@ class Residual(nn.Module):
         self.linear2 = nn.Linear(num_features, num_features)
         self.relu2 = nn.ReLU()
 
-    def forward(self, x: torch.tensor) -> torch.tensor:
+    def forward(self, x: torch.tensor) -> torch.Tensor:
 
         identity = out = x
 
@@ -81,7 +81,7 @@ class DownSample(nn.Module):
         self.linear = nn.Linear(in_features, out_features)
         self.relu = nn.ReLU()
 
-    def forward(self, x: torch.tensor) -> torch.tensor:
+    def forward(self, x: torch.tensor) -> torch.Tensor:
         out = x
 
         if self.add_IC:
@@ -131,5 +131,5 @@ class ResMLP(BaseModel):
 
         return block
 
-    def forward(self, x: torch.tensor) -> torch.tensor:
+    def forward(self, x: torch.tensor) -> torch.Tensor:
         return self.blocks(x)
