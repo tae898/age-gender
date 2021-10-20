@@ -32,12 +32,12 @@ I advise you that you run all of below in a virutal python environment.
 
 For the CPU model
 ```bash
-docker pull tae898/face-detection-recognition:v0.2
+docker pull tae898/face-detection-recognition:v0.1
 ```
 
 For the GPU model
 ```bash
-docker pull tae898/face-detection-recognition-cuda:v0.2
+docker pull tae898/face-detection-recognition-cuda:v0.1
 ```
 
 The detailed insturctions can be found [here](https://github.com/tae898/face-detection-recognition/blob/main/README.md).
@@ -209,7 +209,7 @@ Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
 
 1. Pull the image from docker hub and run the container.
     ```bash
-    docker run -it --rm -p 10003:10003 tae898/age-gender
+    docker run -it --rm -p 10003:10003 tae898/age-gender:v0.2
     ```
 
 1. For whatever reason if you want to build it from scratch,
@@ -230,9 +230,9 @@ Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
     python3 app.py
     ```
 
-After running the container (i.e. `docker run -it --rm -p 10003:10003 tae898/age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
+After running the container (i.e. `docker run -it --rm -p 10003:10003 tae898/age-gender:v0.2`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture. 
 
-NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 tae898/face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
+NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 tae898/face-detection-recognition:v0.1` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda:v0.1` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
 
 ## Contributing
 
