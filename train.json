@@ -6,7 +6,7 @@
     "arch": {
         "type": "ResMLP",
         "args": {
-            "dropout": 0.00,
+            "dropout": 0.05,
             "num_residuals_per_block": 1,
             "num_blocks": 2,
             "num_classes": 101,
@@ -21,7 +21,7 @@
             "data_dir": "data/",
             "batch_size": 128,
             "shuffle": true,
-            "validation_split": 0.1,
+            "validation_split": 0,
             "num_workers": 8,
             "dataset": "imdb_wiki_adience",
             "num_classes": 101
@@ -45,7 +45,7 @@
         }
     },
     "trainer": {
-        "epochs": 30,
+        "epochs": 5,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
