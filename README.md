@@ -32,14 +32,13 @@ I advise you that you run all of below in a virutal python environment.
 
 For the CPU model
 ```bash
-docker pull tae898/face-detection-recognition:latest
+docker pull tae898/face-detection-recognition:v0.1
 ```
 
 For the GPU model
 ```bash
-docker pull tae898/face-detection-recognition-cuda:latest
+docker pull tae898/face-detection-recognition-cuda:v0.1
 ```
-
 
 The detailed insturctions can be found [here](https://github.com/tae898/face-detection-recognition/blob/main/README.md).
 
