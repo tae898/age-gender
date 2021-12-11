@@ -234,6 +234,10 @@ After running the container (i.e. `docker run -it --rm -p 10003:10003 tae898/age
 
 NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 tae898/face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
 
+## Troubleshooting
+
+The best way to find and solve your problems is to see in the github issue tab. If you can't find what you want, feel free to raise an issue. We are pretty responsive.
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
