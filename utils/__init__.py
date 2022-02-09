@@ -1,2 +1,2 @@
-from .util import *
 from .bayesian import *
+from .util import *

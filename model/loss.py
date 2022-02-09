@@ -1,5 +1,5 @@
-import torch.nn.functional as F
 import torch
+import torch.nn.functional as F
 
 
 def nll_loss(output: torch.tensor, target: torch.tensor):
@@ -8,7 +8,7 @@ def nll_loss(output: torch.tensor, target: torch.tensor):
 
 def cse(output: torch.tensor, target: torch.tensor):
     """
-    Using the pytorch cross entropy loss means that you don't have to add a 
+    Using the pytorch cross entropy loss means that you don't have to add a
     softmax activation.
 
     """

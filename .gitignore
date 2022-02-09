@@ -133,3 +133,6 @@ dmypy.json
 
 # pytorh models
 saved/
+
+# confidential images
+test-images-dangerous

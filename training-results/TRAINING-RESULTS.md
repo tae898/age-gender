@@ -3,6 +3,7 @@
 ## Gender, 2 classes
 
 ### `hp-tuning.py` with `hp-tuning.json` (below)
+
 ```
 {
     "criterion": "cse",
@@ -64,11 +65,13 @@ Best trial config: OrderedDict([('criterion', 'cse'), ('gender_or_age', 'gender'
 Best trial final validation loss: 0.4430247858548776
 Best trial final validation accuracy: 0.8243063402385437
 ```
-* time elapsed: 1 hour 10 mins
+
+- time elapsed: 1 hour 10 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true`
 
 #### imdb_wiki
+
 ```
 2021-08-06 11:06:48,936 - trainer - INFO -     epoch          : 3               
 2021-08-06 11:06:48,936 - trainer - INFO -     loss           : 0.4266238472346062
@@ -78,7 +81,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 11:06:48,963 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_110516/checkpoint-epoch3.pth ...
 2021-08-06 11:06:48,998 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 4 mins
+
+- time elapsed: 4 mins
 
 #### imdb_wiki_adience
 
@@ -91,7 +95,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 11:15:24,305 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_111344/checkpoint-epoch3.pth ...
 2021-08-06 11:15:24,329 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 4 mins
+
+- time elapsed: 4 mins
 
 #### cross-val on adience, from random initialization
 
@@ -109,7 +114,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8406407172280743,                               
 "test_accuracy_std": 0.027314883353706715
 ```
-* time elapsed: 13 mins
+
+- time elapsed: 13 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -127,11 +133,13 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8887175397758311,                               
 "test_accuracy_std": 0.025486444846123855  
 ```
-* time elapsed: 14 mins
+
+- time elapsed: 14 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
 
 #### imdb_wiki
+
 ```
 2021-08-10 22:08:13,279 - trainer - INFO -     epoch          : 2               
 2021-08-10 22:08:13,279 - trainer - INFO -     loss           : 0.43079286286562213
@@ -141,7 +149,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-10 22:08:13,298 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_220715/checkpoint-epoch2.pth ...
 2021-08-10 22:08:13,320 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 3 mins
+
+- time elapsed: 3 mins
 
 #### imdb_wiki_adience
 
@@ -154,7 +163,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-10 22:18:18,604 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_221247/checkpoint-epoch12.pth ...
 2021-08-10 22:18:18,627 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 8 mins
+
+- time elapsed: 8 mins
 
 #### cross-val on adience, from random initialization
 
@@ -172,7 +182,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8412609429948891,                               
 "test_accuracy_std": 0.03257054909731762 
 ```
-* time elapsed: 11 mins
+
+- time elapsed: 11 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -190,12 +201,12 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8985643474512477,                               
 "test_accuracy_std": 0.019786984421465842 
 ```
-* time elapsed: 11 mins
+
+- time elapsed: 11 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": false`
 
 `"lr": 0.00243983281217744`
-
 
 #### imdb_wiki
 
@@ -208,7 +219,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 12:13:51,867 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_121255/checkpoint-epoch2.pth ...
 2021-08-06 12:13:51,888 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 3 mins
+
+- time elapsed: 3 mins
 
 #### imdb_wiki_adience
 
@@ -221,7 +233,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 12:26:57,926 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_122558/checkpoint-epoch2.pth ...
 2021-08-06 12:26:57,944 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 3 mins
+
+- time elapsed: 3 mins
 
 #### cross-val on adience, from random initialization
 
@@ -239,7 +252,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8206668461496278,                               
 "test_accuracy_std": 0.03890423963959933
 ```
-* time elapsed: 12 mins
+
+- time elapsed: 12 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -257,7 +271,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.9066379871650122,                               
 "test_accuracy_std": 0.024821142870521833 
 ```
-* time elapsed: 11 mins
+
+- time elapsed: 11 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": true`
 
@@ -272,7 +287,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 13:46:30,441 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_134401/checkpoint-epoch5.pth ...
 2021-08-06 13:46:30,469 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 5 mins
+
+- time elapsed: 5 mins
 
 #### imdb_wiki_adience
 
@@ -286,7 +302,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 13:52:03,592 - trainer - INFO - Saving current best: model_best.pth ...
 
 ```
-* time elapsed: 4 mins
+
+- time elapsed: 4 mins
 
 #### cross-val on adience, from random initialization
 
@@ -304,7 +321,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8339792004421082,                               
 "test_accuracy_std": 0.03452867618194227   
 ```
-* time elapsed: 14 mins
+
+- time elapsed: 14 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -322,7 +340,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.8936712563920685,                               
 "test_accuracy_std": 0.01711819441026738   
 ```
-* time elapsed: 14 mins
+
+- time elapsed: 14 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": false`
 
@@ -339,7 +358,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 14:30:11,668 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_142755/checkpoint-epoch5.pth ...
 2021-08-06 14:30:11,688 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 4 mins
+
+- time elapsed: 4 mins
 
 #### imdb_wiki_adience
 
@@ -352,7 +372,8 @@ Best trial final validation accuracy: 0.8243063402385437
 2021-08-06 14:34:59,126 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0806_143330/checkpoint-epoch3.pth ...
 2021-08-06 14:34:59,145 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 4 mins
+
+- time elapsed: 4 mins
 
 #### cross-val on adience, from random initialization
 
@@ -370,7 +391,8 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.5847169636316493,                               
 "test_accuracy_std": 0.10150374884096376 
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -388,12 +410,13 @@ Best trial final validation accuracy: 0.8243063402385437
 "test_accuracy_mean": 0.9033931761843292,                               
 "test_accuracy_std": 0.02273976694274134 
 ```
-* time elapsed: 11 mins
 
+- time elapsed: 11 mins
 
 ## Age, 8 classes
 
 ### `hp-tuning.py` with `hp-tuning.json` (below)
+
 ```
 {
     "criterion": "cse",
@@ -455,7 +478,8 @@ Best trial config: OrderedDict([('criterion', 'cse'), ('gender_or_age', 'age'), 
 Best trial final validation loss: 1.0595833214047627
 Best trial final validation accuracy: 0.6075078468298807
 ```
-* time elapsed: 1 hour 10 mins
+
+- time elapsed: 1 hour 10 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true`
 
@@ -470,7 +494,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-04 23:51:11,935 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_234845/checkpoint-epoch3.pth ...
 2021-08-04 23:51:11,955 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 7 mins
+
+- time elapsed: 7 mins
 
 #### imdb_wiki_adience
 
@@ -483,7 +508,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-04 23:59:18,616 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_235657/checkpoint-epoch3.pth ...
 2021-08-04 23:59:18,631 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### cross-val on adience, from random initialization
 
@@ -501,7 +527,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5481515230237024,                               
 "test_accuracy_std": 0.03905170389565693 
 ```
-* time elapsed: 13 mins
+
+- time elapsed: 13 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -519,11 +546,13 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.6086133596326488,                               
 "test_accuracy_std": 0.028311297707050202 
 ```
-* time elapsed: 12 mins
+
+- time elapsed: 12 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
 
 #### imdb_wiki
+
 ```
 2021-08-10 22:53:17,742 - trainer - INFO -     epoch          : 3               
 2021-08-10 22:53:17,742 - trainer - INFO -     loss           : 0.9536550090977738
@@ -533,7 +562,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-10 22:53:17,756 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_225113/checkpoint-epoch3.pth ...
 2021-08-10 22:53:17,772 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -546,7 +576,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-10 23:00:41,184 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_225830/checkpoint-epoch3.pth ...
 2021-08-10 23:00:41,200 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 5 mins
+
+- time elapsed: 5 mins
 
 #### cross-val on adience, from random initialization
 
@@ -564,7 +595,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5437349798897955,                               
 "test_accuracy_std": 0.041431485692379325
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -582,7 +614,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5968017863017355,                               
 "test_accuracy_std": 0.0186838841831273
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": false`
 
@@ -597,7 +630,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 04:21:30,450 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_041929/checkpoint-epoch3.pth ...
 2021-08-05 04:21:30,468 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 5 mins
+
+- time elapsed: 5 mins
 
 #### imdb_wiki_adience
 
@@ -610,7 +644,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 13:02:57,090 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_125918/checkpoint-epoch3.pth ...
 2021-08-05 13:02:57,106 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 7 mins
+
+- time elapsed: 7 mins
 
 #### cross-val on adience, from random initialization
 
@@ -628,7 +663,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5332253618829352,                               
 "test_accuracy_std": 0.040315399034449785 
 ```
-* time elapsed: 13 mins
+
+- time elapsed: 13 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -646,7 +682,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.6032404380342925,                               
 "test_accuracy_std": 0.03081564764232662  
 ```
-* time elapsed: 9 mins
+
+- time elapsed: 9 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": true`
 
@@ -661,7 +698,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 15:30:54,780 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_152838/checkpoint-epoch3.pth ...
 2021-08-05 15:30:54,802 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -674,7 +712,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 15:53:41,065 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_155112/checkpoint-epoch3.pth ...
 2021-08-05 15:53:41,085 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### cross-val on adience, from random initialization
 
@@ -692,7 +731,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5394806824328668,                               
 "test_accuracy_std": 0.03735867803724017 
 ```
-* time elapsed: 22 mins
+
+- time elapsed: 22 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -710,10 +750,10 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.6046470200696574,                               
 "test_accuracy_std": 0.026999898209333337  
 ```
-* time elapsed: 12 mins
+
+- time elapsed: 12 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": false`
-
 
 #### imdb_wiki
 
@@ -726,7 +766,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 16:41:58,605 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0805_163951/checkpoint-epoch3.pth ...
 2021-08-05 16:41:58,620 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -740,7 +781,8 @@ Best trial final validation accuracy: 0.6075078468298807
 2021-08-05 16:50:45,589 - trainer - INFO - Saving current best: model_best.pth ...
 
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### cross-val on adience, from random initialization
 
@@ -758,7 +800,8 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.40679957475404477,                              
 "test_accuracy_std": 0.05287554302722316 
 ```
-* time elapsed: 12 mins
+
+- time elapsed: 12 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -776,11 +819,13 @@ Best trial final validation accuracy: 0.6075078468298807
 "test_accuracy_mean": 0.5936561489498906,                               
 "test_accuracy_std": 0.03572556187687143  
 ```
-* time elapsed: 9 mins
+
+- time elapsed: 9 mins
 
 ## Age, 101 classes
 
 ### `hp-tuning.py` with `hp-tuning.json` (below)
+
 ```
 {
     "criterion": "cse",
@@ -842,7 +887,8 @@ Best trial config: OrderedDict([('criterion', 'cse'), ('gender_or_age', 'age'), 
 Best trial final validation loss: 3.287252651575284
 Best trial final validation accuracy: 0.1598242310106717
 ```
-* time elapsed: 1 hour 10 mins
+
+- time elapsed: 1 hour 10 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true`
 
@@ -857,7 +903,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 12:59:58,940 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_125337/checkpoint-epoch7.pth ...
 2021-08-04 12:59:58,959 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 #### imdb_wiki_adience
 
@@ -870,7 +917,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 13:10:44,993 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_130630/checkpoint-epoch5.pth ...
 2021-08-04 13:10:45,013 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 7 mins
+
+- time elapsed: 7 mins
 
 #### cross-val on adience, from random initialization
 
@@ -888,7 +936,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5444984608803018,                               
 "test_accuracy_std": 0.03969608603733163
 ```
-* time elapsed: 13 mins
+
+- time elapsed: 13 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -906,11 +955,13 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.6005364514701527,                               
 "test_accuracy_std": 0.023349385815310295 
 ```
-* time elapsed: 14 mins
+
+- time elapsed: 14 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": true, dropout==0`
 
 #### imdb_wiki
+
 ```
 2021-08-10 23:32:11,944 - trainer - INFO -     epoch          : 3               
 2021-08-10 23:32:11,945 - trainer - INFO -     loss           : 3.1153518415612433
@@ -920,7 +971,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-10 23:32:11,960 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_233003/checkpoint-epoch3.pth ...
 2021-08-10 23:32:11,977 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -933,7 +985,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-10 23:39:23,572 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0810_233712/checkpoint-epoch3.pth ...
 2021-08-10 23:39:23,588 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### cross-val on adience, from random initialization
 
@@ -951,7 +1004,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5476791019342407,                               
 "test_accuracy_std": 0.035446737871884244  
 ```
-* time elapsed: 11 mins
+
+- time elapsed: 11 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -969,7 +1023,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.591592747685539,                                
 "test_accuracy_std": 0.03617848265492994 
 ```
-* time elapsed: 11 mins
+
+- time elapsed: 11 mins
 
 ### `training.py` with `"add_residual": true, "add_IC": false`
 
@@ -984,7 +1039,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 14:09:31,176 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_140648/checkpoint-epoch4.pth ...
 2021-08-04 14:09:31,194 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -997,7 +1053,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 14:16:42,595 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_141429/checkpoint-epoch3.pth ...
 2021-08-04 14:16:42,611 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 5 mins
+
+- time elapsed: 5 mins
 
 #### cross-val on adience, from random initialization
 
@@ -1015,7 +1072,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5329012058797243,                               
 "test_accuracy_std": 0.03716699659878682 
 ```
-* time elapsed: 18 mins
+
+- time elapsed: 18 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -1033,7 +1091,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.6030450285446743,                               
 "test_accuracy_std": 0.021638053524286733 
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": true`
 
@@ -1048,7 +1107,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 15:44:57,679 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_153854/checkpoint-epoch8.pth ...
 2021-08-04 15:44:57,702 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 10 mins
+
+- time elapsed: 10 mins
 
 #### imdb_wiki_adience
 
@@ -1061,7 +1121,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 16:03:16,418 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_155115/checkpoint-epoch16.pth ...
 2021-08-04 16:03:16,439 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 15 mins
+
+- time elapsed: 15 mins
 
 #### cross-val on adience, from random initialization
 
@@ -1079,7 +1140,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5434543605071928,                               
 "test_accuracy_std": 0.037108616301812565
 ```
-* time elapsed: 15 mins
+
+- time elapsed: 15 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -1097,10 +1159,10 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5984918813045172,                               
 "test_accuracy_std": 0.02257798885132503    
 ```
-* time elapsed: 13 mins
+
+- time elapsed: 13 mins
 
 ### `training.py` with `"add_residual": false, "add_IC": false`
-
 
 #### imdb_wiki
 
@@ -1113,7 +1175,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 22:38:52,733 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_223640/checkpoint-epoch3.pth ...
 2021-08-04 22:38:52,749 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### imdb_wiki_adience
 
@@ -1126,7 +1189,8 @@ Best trial final validation accuracy: 0.1598242310106717
 2021-08-04 22:57:13,860 - trainer - INFO - Saving checkpoint: saved/models/ResMLP/0804_225547/checkpoint-epoch2.pth ...
 2021-08-04 22:57:13,875 - trainer - INFO - Saving current best: model_best.pth ...
 ```
-* time elapsed: 6 mins
+
+- time elapsed: 6 mins
 
 #### cross-val on adience, from random initialization
 
@@ -1144,7 +1208,8 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.4269996969331043,                               
 "test_accuracy_std": 0.03880932637987499
 ```
-* time elapsed: 19 mins
+
+- time elapsed: 19 mins
 
 #### cross-val on adience, pretrained on imdb_wiki
 
@@ -1162,40 +1227,39 @@ Best trial final validation accuracy: 0.1598242310106717
 "test_accuracy_mean": 0.5967172266179805,                               
 "test_accuracy_std": 0.03440994418228202 
 ```
-* time elapsed: 9 mins
 
+- time elapsed: 9 mins
 
 # Summary
 
 ## val loss
 
-* **baseline**    3
-* no dropout      2
-* no ic           0
-* no skip         1
-* no ic no skip   0
-    
+- **baseline**    3
+- no dropout      2
+- no ic           0
+- no skip         1
+- no ic no skip   0
+
 ## val acc
 
-* **baseline**    4
-* no dropout      2
-* no ic           0
-* no skip         0
-* no ic no skip   0
-
+- **baseline**    4
+- no dropout      2
+- no ic           0
+- no skip         0
+- no ic no skip   0
 
 ## test loss
 
-* baseline        1
-* no dropout      1
-* **no ic**       4
-* no skip         0
-* no ic no skip   0
+- baseline        1
+- no dropout      1
+- **no ic**       4
+- no skip         0
+- no ic no skip   0
 
 ## test acc
 
-* **baseline**    2
-* **no dropout**  2
-* **no ic**       2
-* no skip         0
-* no ic no skip   0
+- **baseline**    2
+- **no dropout**  2
+- **no ic**       2
+- no skip         0
+- no ic no skip   0

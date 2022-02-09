@@ -15,21 +15,21 @@ def accuracy(output: torch.tensor, target: torch.tensor):
 
 def accuracy_mse(output: torch.tensor, target: torch.tensor):
     """
-    This function was made when I was tinkering with regression rather than 
+    This function was made when I was tinkering with regression rather than
     classification. Just ignore it.
     """
     with torch.no_grad():
         assert len(output) == len(target)
         correct = 0
-        correct += torch.sum(((output-target).abs() < 1)).item()
+        correct += torch.sum(((output - target).abs() < 1)).item()
     return correct / len(target)
 
 
 def accuracy_relaxed(output: torch.tensor, target: torch.tensor):
     """
     I made this function so that 101 age classes correspond to 8 age classes,
-    for Adience dataset. Turns out this results in the same value as the vanilla 
-    accuracy. Just ignore it. 
+    for Adience dataset. Turns out this results in the same value as the vanilla
+    accuracy. Just ignore it.
 
     """
     with torch.no_grad():

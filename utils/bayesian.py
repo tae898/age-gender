@@ -1,16 +1,17 @@
+import numpy as np
 import torch
+import torch.nn.functional as F
 from scipy.stats import entropy as calc_entropy
 from torch.cuda.amp import autocast
-import torch.nn.functional as F
-import numpy as np
 
 device = "cpu"
 if torch.cuda.is_available():
     device = "cuda:0"
 
 
-def forward_mc(model: torch.nn.Module, embedding: np.ndarray,
-               num_passes: int = 512) -> tuple:
+def forward_mc(
+    model: torch.nn.Module, embedding: np.ndarray, num_passes: int = 512
+) -> tuple:
     """Perform MC dropout
 
     https://arxiv.org/pdf/1506.02142.pdf
@@ -21,8 +22,9 @@ def forward_mc(model: torch.nn.Module, embedding: np.ndarray,
     embedding = torch.tensor(embedding)
     embedding = embedding.repeat(num_passes, 1)
     with torch.no_grad():
-        if device == 'cuda:0':
+        if device == "cuda:0":
             with autocast():
+                embedding = embedding.to("cuda:0")
                 outputs = model(embedding)
         else:
             outputs = model(embedding)
@@ -47,8 +49,8 @@ def forward_mc(model: torch.nn.Module, embedding: np.ndarray,
 
 
 def enable_dropout(model):
-    """ Function to enable the dropout layers during test-time """
+    """Function to enable the dropout layers during test-time"""
     for m in model.modules():
-        if m.__class__.__name__.startswith('Dropout'):
+        if m.__class__.__name__.startswith("Dropout"):
             m.train()
             print(m)

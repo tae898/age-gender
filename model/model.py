@@ -1,21 +1,29 @@
-from torch._C import Value
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch._C import Value
+
 from base import BaseModel
-import torch
 
 
 class Residual(nn.Module):
     """
-    This module looks like what you find in the original resnet or IC paper     
-    (https://arxiv.org/pdf/1905.05928.pdf), except that it's based on MLP, not CNN. 
+    This module looks like what you find in the original resnet or IC paper
+    (https://arxiv.org/pdf/1905.05928.pdf), except that it's based on MLP, not CNN.
     If you flag `only_MLP` as True, then it won't use any batch norm, dropout, or
-    residual connections 
+    residual connections
 
     """
 
-    def __init__(self, num_features: int, dropout: float,
-                 add_residual: bool, add_IC: bool, i: int, j: int):
+    def __init__(
+        self,
+        num_features: int,
+        dropout: float,
+        add_residual: bool,
+        add_IC: bool,
+        i: int,
+        j: int,
+    ):
         super().__init__()
         self.num_features = num_features
         self.add_residual = add_residual
@@ -60,14 +68,15 @@ class Residual(nn.Module):
 
 class DownSample(nn.Module):
     """
-    This module is an MLP, where the number of output features is lower than 
-    that of input features. If you flag `only_MLP` as False, it'll add norm 
-    and dropout 
+    This module is an MLP, where the number of output features is lower than
+    that of input features. If you flag `only_MLP` as False, it'll add norm
+    and dropout
 
     """
 
-    def __init__(self, in_features: int, out_features: int, dropout: float,
-                 add_IC: bool):
+    def __init__(
+        self, in_features: int, out_features: int, dropout: float, add_IC: bool
+    ):
         super().__init__()
         assert in_features > out_features
 
@@ -95,23 +104,39 @@ class DownSample(nn.Module):
 
 class ResMLP(BaseModel):
     """
-    MLP with optinally batch norm, dropout, and residual connections. I got 
+    MLP with optinally batch norm, dropout, and residual connections. I got
     inspiration from the original ResNet paper and https://arxiv.org/pdf/1905.05928.pdf.
 
-    Downsampling is done after every block so that the features can be encoded 
+    Downsampling is done after every block so that the features can be encoded
     and compressed.
 
     """
 
-    def __init__(self, dropout: float, num_residuals_per_block: int, num_blocks: int, num_classes: int,
-                 num_initial_features: int, add_residual: bool = True, add_IC: bool = True):
+    def __init__(
+        self,
+        dropout: float,
+        num_residuals_per_block: int,
+        num_blocks: int,
+        num_classes: int,
+        num_initial_features: int,
+        add_residual: bool = True,
+        add_IC: bool = True,
+    ):
         super().__init__()
 
         blocks = []
 
         for i in range(num_blocks):
-            blocks.extend(self._create_block(
-                num_initial_features, dropout, num_residuals_per_block, add_residual, add_IC, i))
+            blocks.extend(
+                self._create_block(
+                    num_initial_features,
+                    dropout,
+                    num_residuals_per_block,
+                    add_residual,
+                    add_IC,
+                    i,
+                )
+            )
             num_initial_features //= 2
 
         # last classiciation layer
@@ -119,15 +144,19 @@ class ResMLP(BaseModel):
 
         self.blocks = nn.Sequential(*blocks)
 
-    def _create_block(self, in_features: int, dropout: float,
-                      num_residuals_per_block: int, add_residual: bool,
-                      add_IC: bool, i: int) -> list:
+    def _create_block(
+        self,
+        in_features: int,
+        dropout: float,
+        num_residuals_per_block: int,
+        add_residual: bool,
+        add_IC: bool,
+        i: int,
+    ) -> list:
         block = []
         for j in range(num_residuals_per_block):
-            block.append(Residual(in_features, dropout,
-                                  add_residual, add_IC, i, j))
-        block.append(DownSample(
-            in_features, in_features//2, dropout, add_IC))
+            block.append(Residual(in_features, dropout, add_residual, add_IC, i, j))
+        block.append(DownSample(in_features, in_features // 2, dropout, add_IC))
 
         return block
 
