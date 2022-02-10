@@ -187,7 +187,7 @@ There are three training steps involved.
 
 1. Five random seeds on 5-fold cross-validation on the `Adience` dataset.
 
-   Since the reported metrics (i.e. accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. Configure the values in `cross-val.json` and run `python cross-val.py`.
+   Since the reported metrics (i.e., accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. Configure the values in `cross-val.json` and run `python cross-val.py`.
 
 ## [Evaluation results](training-results/TRAINING-RESULTS.md)
 
@@ -257,9 +257,29 @@ Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
    python3 app.py
    ```
 
-After running the container (i.e. `docker run -it --rm -p 10003:10003 tae898/age-gender`), you can run `client.py` (e.g. `python client.py --image-path test-images/matrix-tae-final_exported_37233.jpg`) to get estimated genders and ages in the picture.
+### Running a client
 
-NB: You also have to run the face-detection-recognition (`docker run -it --rm -p 10002:10002 tae898/face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda` for cuda), before running `client.py`. This separation might be annoying but the modularization will help in the future.
+First install the requirements by running `pip install requirements-client.txt`, and then run the two containers:
+
+1. `docker run -it --rm -p 10002:10002 tae898/face-detection-recognition` for CPU or `docker run --gpus all -it --rm -p 10002:10002 tae898/face-detection-recognition-cuda` for cuda.
+1. `docker run -it --rm -p 10003:10003 tae898/age-gender` for CPU or `docker run -it --rm -p 10003:10003 --gpus all tae898/age-gender-cuda` for cuda.
+
+Now that the two containers are running, you can run `client.py`. There are two options to run the client.
+
+```sh
+usage: client.py [-h] [--url-face URL_FACE] [--url-age-gender URL_AGE_GENDER]
+                 [--image-path IMAGE_PATH] [--camera-id CAMERA_ID]
+                 [--mode MODE]
+```
+
+1. If you have an image stored in disk and want to run the models on this image, then do something like:
+   ```sh
+   python client.py --mode image --image-path test-images/gettyimages-1067881118-2048x2048.jpg
+   ```
+1. If you want to run the models on your webcam video, then do something like:
+   ```sh
+   python client.py --mode webcam
+   ```
 
 ## Troubleshooting
 
