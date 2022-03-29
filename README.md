@@ -316,4 +316,4 @@ Check out the [paper](https://arxiv.org/abs/2108.08186).
 
 ## Authors
 
-- [Taewoon Kim](https://taewoonkim.com/)
+- [Taewoon Kim](https://taewoon.kim/)
