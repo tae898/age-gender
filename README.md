@@ -17,13 +17,33 @@ If you are only interested in model inference, go to [this section](#deployment)
 
 ## Datasets
 
-I used [Adience age and gender dataset](https://talhassner.github.io/home/projects/Adience/Adience-data.html). Download the data and place them at `./data/Adience/`.
+<details>
+   <summary>Click to expand!</summary>
+
+I used [Adience age and gender dataset](https://talhassner.github.io/home/projects/Adience/Adience-data.html). Download the data and place them at `./data/Adience/`. After downloading them, your `data` directory should look something like this:
+
+```console
+data
+└── Adience
+    ├── aligned
+    ├── faces
+    ├── fold_0_data.txt
+    ├── fold_1_data.txt
+    ├── fold_2_data.txt
+    ├── fold_3_data.txt
+    └── fold_4_data.txt
+```
 
 You can find the state of the art models at [here](https://paperswithcode.com/sota/age-and-gender-classification-on-adience-age) for the age and [here](https://paperswithcode.com/sota/age-and-gender-classification-on-adience) for the gender, respectively.
 
 I also used [the IMDB-WIKI dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/). This dataset is huge. It's got more than 500,000 faces with gender and age labeled. One weird thing is that this dataset doesn't have train / val / test splits. This dataset is pretty much only used to pre-train your model. I don't know why but that is what it is. People don't compare their scores against this dataset. So I'll do the same. I'll use this dataset to improve my training and report the final metrics on the Adience age and gender dataset. Anyways, download `imdb_crop.tar` and `wiki_crop.tar`, and place them at `./data/imdb_crop` and `./data/wiki_crop`, respectively.
 
+</details>
+
 ## Data pre-processing
+
+<details>
+   <summary>Click to expand!</summary>
 
 I advise you that you run all of below in a virutal python environment.
 
@@ -58,13 +78,13 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    At the root of this repo, run the below command.
 
    ```bash
-   python3 -c "from utils.scripts import extract_Adience_arcface; extract_Adience_arcface('aligned', docker_port=10002, cuda=False, resize=640)"
+   python -c "from utils.scripts import extract_Adience_arcface; extract_Adience_arcface('aligned', docker_port=10002, cuda=False, resize=640)"
    ```
 
    The argument `aligned` means that we'll be using the aligned face images, not raw. The aligned images have the face of interest in the center, which makes it easier to find the face.
 
    ```bash
-   python3 -c "from utils.scripts import get_Adience_clean; get_Adience_clean('aligned', resize=640, det_score=0.9)"
+   python -c "from utils.scripts import get_Adience_clean; get_Adience_clean('aligned', resize=640, det_score=0.9)"
    ```
 
    This will write `./data/Adience/meta-data-aligned.json` and `./data/Adience/data-aligned.npy`
@@ -74,11 +94,11 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    At the root of this repo, run the below command.
 
    ```bash
-   python3 -c "from utils.scripts import extract_imdb_wiki_arcface; extract_imdb_wiki_arcface('imdb', docker_port=10002, cuda=False, resize=640)"
+   python -c "from utils.scripts import extract_imdb_wiki_arcface; extract_imdb_wiki_arcface('imdb', docker_port=10002, cuda=False, resize=640)"
    ```
 
    ```bash
-   python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('imdb', resize=640, det_score=0.9)"
+   python -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('imdb', resize=640, det_score=0.9)"
    ```
 
    This will write `./data/imdb_crop/meta-data.json` and `./data/imdb_crop/data.npy`
@@ -88,11 +108,11 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    At the root of this repo, run the below command.
 
    ```bash
-   python3 -c "from utils.scripts import extract_imdb_wiki_arcface; extract_imdb_wiki_arcface('wiki', docker_port=10002, cuda=False, resize=640)"
+   python -c "from utils.scripts import extract_imdb_wiki_arcface; extract_imdb_wiki_arcface('wiki', docker_port=10002, cuda=False, resize=640)"
    ```
 
    ```bash
-   python3 -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('wiki', resize=640, det_score=0.9)"
+   python -c "from utils.scripts import get_imdb_wiki_clean; get_imdb_wiki_clean('wiki', resize=640, det_score=0.9)"
    ```
 
    This will write `./data/wiki_crop/meta-data.json` and `./data/wiki_crop/data.npy`
@@ -108,19 +128,19 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    | 19,370                | 4,484  | 3,730  | 3,894  | 3,446  | 3,816  |
 
    Removed data
-   | failed to process image | no age found | no gender found | no face detected | bad quality (det_score\<0.9) | SUM             |
+   | failed to process image | no age found | no gender found | no face detected | bad quality (det_score\<0.9) | SUM |
    | ----------------------- | ------------ | --------------- | ---------------- | ---------------------------- | --------------- |
-   | 0                       | 748          | 1,170           | 322              | 75                           | 2,315 (11.95 %) |
+   | 0 | 748 | 1,170 | 322 | 75 | 2,315 (11.95 %) |
 
    Genders
-   | female | male  |
+   | female | male |
    | ------ | ----- |
-   | 9,103  | 7,952 |
+   | 9,103 | 7,952 |
 
    Ages
    | 0 to 2 | 4 to 6 | 8 to 12 | 15 to 20 | 25 to 32 | 38 to 43 | 48 to 53 | 60 to 100 |
    | ------ | ------ | ------- | -------- | -------- | -------- | -------- | --------- |
-   | 1,363  | 2,087  | 2,226   | 1,761    | 5,162    | 2,719    | 907      | 830       |
+   | 1,363 | 2,087 | 2,226 | 1,761 | 5,162 | 2,719 | 907 | 830 |
 
 1. IMDB age and gender dataset
 
@@ -131,12 +151,12 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    | 460,723               |
 
    Removed data
-   | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score\<0.9) | no embeddings | SUM               |
+   | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score\<0.9) | no embeddings | SUM |
    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | ---------------------------- | ------------- | ----------------- |
-   | 22,200                  | 690          | 8,453           | 21,441           | 47,278             | 3855                         | 27            | 103,944 (22.56 %) |
+   | 22,200 | 690 | 8,453 | 21,441 | 47,278 | 3855 | 27 | 103,944 (22.56 %) |
 
    Genders
-   | female  | male    |
+   | female | male |
    | ------- | ------- |
    | 153,316 | 203,463 |
 
@@ -153,20 +173,25 @@ Resizing image to the same shape (e.g., `resize=640` resizes every image to a bl
    | 62,328                |
 
    Removed data
-   | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score\<0.9) | no embeddings | SUM              |
+   | failed to process image | no age found | no gender found | no face detected | more than one face | bad quality (det_score\<0.9) | no embeddings | SUM |
    | ----------------------- | ------------ | --------------- | ---------------- | ------------------ | ---------------------------- | ------------- | ---------------- |
-   | 10,909                  | 1,781        | 2,485           | 3,074            | 2,179              | 428                          | 0             | 20,856 (33.46 %) |
+   | 10,909 | 1,781 | 2,485 | 3,074 | 2,179 | 428 | 0 | 20,856 (33.46 %) |
 
    Genders
-   | female | male   |
+   | female | male |
    | ------ | ------ |
-   | 9,912  | 31,560 |
+   | 9,912 | 31,560 |
 
    Ages
 
    Ages are fine-grained integers from 0 to 100. Check `./data/wiki_crop/meta-data.json` for the details.
 
+</details>
+
 ## Training
+
+<details>
+   <summary>Click to expand!</summary>
 
 ### Model
 
@@ -188,15 +213,20 @@ There are three training steps involved.
 
    Since the reported metrics (i.e., accuracy) is 5-fold cross-validation, we will do the same here. In order to get the least biased numbers, we run this five times each with a different seed. This means that we are training in total of 25 times and report the average of the 25 numbers. Configure the values in `cross-val.json` and run `python cross-val.py`.
 
-## [Evaluation results](training-results/TRAINING-RESULTS.md)
+</details>
 
-Click on the above link to see the detailed results.
+## Evaluation results
+
+[Click](training-results/TRAINING-RESULTS.md) to see the detailed results.
 
 ## Qualitative analysis
 
-Check `./test-images` to see the model inference results on some stock images.
+Check [`./test-images`](./test-images) to see the model inference results on some stock images.
 
 ## Deployment
+
+<details>
+   <summary>Click to expand!</summary>
 
 We provide the gender and the age models, which are trained on IMDB, WIKI, and Adience datasets. The gender model is a binary classification and the age model is a 101-class (from 0 to 100 years old) classification. They are MLPs with dropout, batch norm, and residual connections. They can be found at `./models/gender.pth` and `./models/age.pth`, respectively. Both are light-weight. Running on a CPU is enough.
 
@@ -219,7 +249,7 @@ Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
      For whatever reason if you want to build it from scratch,
 
      ```sh
-     docker build -t age-gender .  
+     docker build -t age-gender .
      docker run -it --rm -p 10003:10003 age-gender
      ```
 
@@ -253,7 +283,7 @@ Check out [this demo video](https://youtu.be/Dna_Hp-s78I).
 1. Run `app.py`
 
    ```bash
-   python3 app.py
+   python app.py
    ```
 
 ### Running a client
@@ -280,6 +310,8 @@ usage: client.py [-h] [--url-face URL_FACE] [--url-age-gender URL_AGE_GENDER]
    python client.py --mode webcam
    ```
 
+</details>
+
 ## Troubleshooting
 
 The best way to find and solve your problems is to see in the github issue tab. If you can't find what you want, feel free to raise an issue. We are pretty responsive.
@@ -305,7 +337,7 @@ Check out the [paper](https://arxiv.org/abs/2108.08186).
 
 ```bibtex
 @misc{kim2021generalizing,
-      title={Generalizing MLPs With Dropouts, Batch Normalization, and Skip Connections}, 
+      title={Generalizing MLPs With Dropouts, Batch Normalization, and Skip Connections},
       author={Taewoon Kim},
       year={2021},
       eprint={2108.08186},
