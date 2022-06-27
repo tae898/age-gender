@@ -30,12 +30,14 @@ def extract_Adience_arcface(
 ):
 
     if cuda:
-        image_name = "face-detection-recognition-cuda"
+        image_name = "tae898/face-detection-recognition-cuda"
+        gpus = "all"
     else:
-        image_name = "face-detection-recognition"
+        image_name = "tae898/face-detection-recognition"
+        gpus = None
 
     container = docker.run(
-        image=image_name, gpus="all", detach=True, publish=[(docker_port, 10002)]
+        image=image_name, gpus=gpus, detach=True, publish=[(docker_port, 10002)]
     )
 
     logging.info(f"starting a docker container ...")
@@ -168,14 +170,15 @@ def extract_imdb_wiki_arcface(
     cuda: bool = False,
     resize: int = 640,
 ):
-
     if cuda:
-        image_name = "face-detection-recognition-cuda"
+        image_name = "tae898/face-detection-recognition-cuda"
+        gpus = "all"
     else:
-        image_name = "face-detection-recognition"
+        image_name = "tae898/face-detection-recognition"
+        gpus = None
 
     container = docker.run(
-        image=image_name, gpus="all", detach=True, publish=[(docker_port, 10002)]
+        image=image_name, gpus=gpus, detach=True, publish=[(docker_port, 10002)]
     )
 
     logging.info(f"starting a docker container ...")
