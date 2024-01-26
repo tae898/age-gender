@@ -1,5 +1,7 @@
 # age-gender
 
+[![DOI](https://img.shields.io/badge/Paper-PDF-red.svg)](https://arxiv.org/abs/2108.08186)
+[![DOI](https://zenodo.org/badge/379977889.svg)](https://zenodo.org/badge/latestdoi/379977889)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalizing-mlps-with-dropouts-batch/age-and-gender-classification-on-adience)](https://paperswithcode.com/sota/age-and-gender-classification-on-adience?p=generalizing-mlps-with-dropouts-batch)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalizing-mlps-with-dropouts-batch/age-and-gender-classification-on-adience-age)](https://paperswithcode.com/sota/age-and-gender-classification-on-adience-age?p=generalizing-mlps-with-dropouts-batch)
 
@@ -316,10 +318,6 @@ usage: client.py [-h] [--url-face URL_FACE] [--url-age-gender URL_AGE_GENDER]
 
 The best way to find and solve your problems is to see in the github issue tab. If you can't find what you want, feel free to raise an issue. We are pretty responsive.
 
-## Cite our work
-
-[![DOI](https://zenodo.org/badge/379977889.svg)](https://zenodo.org/badge/latestdoi/379977889)
-
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -332,8 +330,6 @@ Contributions are what make the open source community such an amazing place to b
 1. Open a Pull Request
 
 ## Cite our paper
-
-Check out the [paper](https://arxiv.org/abs/2108.08186).
 
 ```bibtex
 @misc{kim2021generalizing,
